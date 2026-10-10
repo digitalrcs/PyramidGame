@@ -18,3 +18,9 @@
 @media(min-width:801px) and (max-width:1100px){.save-state{display:none}.edition{font-size:9px;letter-spacing:1px;padding-left:16px}.masthead{gap:16px;padding-inline:22px}.welcome{gap:40px}}
 @media(max-width:800px){.masthead{height:auto;min-height:64px;flex-wrap:wrap;padding-block:12px;row-gap:10px}.masthead-right{margin-left:0;width:100%;justify-content:flex-end;gap:16px}.masthead-right:empty{display:none}.masthead-right button{padding:4px 0;font-size:10px}.masthead-right .guide-link{font-size:10px}.terminal{height:calc(100dvh - 196px)}.welcome{padding:30px 25px}.publisher{width:260px;margin-bottom:24px}.welcome h1{font-size:58px}.welcome h1>span{font-size:19px;letter-spacing:3px}.welcome-copy{padding-bottom:24px}.welcome .small{display:block}.welcome-guide{margin-top:22px}.welcome-rule{display:none}.auth-panel{padding-top:26px}.welcome-copy>.muted{max-width:510px}}
 @media(max-width:380px){.edition{max-width:125px;letter-spacing:1px}.welcome h1{font-size:48px}.welcome h1>span{font-size:16px}.masthead-right{justify-content:space-between;gap:8px}}
+
+.welcome-support{margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
+.welcome-support p{margin:0 0 8px;color:var(--muted);font-size:11px}
+.welcome-support a{display:inline-block;padding:8px 0;color:var(--gold);font-size:12px;text-underline-offset:4px;line-height:1.6}
+.welcome-support a:hover{text-decoration-thickness:2px}
+.welcome-support a:focus-visible{outline:2px solid var(--gold);outline-offset:5px}

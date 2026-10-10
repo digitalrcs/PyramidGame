@@ -98,6 +98,10 @@ python -m unittest test_pyramid2000.py
 
 HTTP checks run against a separate local test instance; see the [development guide](docs/Development.md). Never run account-creation or mutation tests against a public game.
 
+## Support Pyramid
+
+If you enjoy the game, you can [donate through GitHub Sponsors](https://github.com/sponsors/digitalrcs) to support continued development and hosting. Thank you for helping keep the adventure going.
+
 ## Background
 
 Inspired by Robert Arnstein's *Pyramid 2000* for the Radio Shack TRS-80, this project preserves a Python recreation and develops a larger web interpretation. It is an independent tribute, not an official release or a verbatim port.
