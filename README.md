@@ -48,7 +48,7 @@ npm run build --prefix Pyramid.Web/Client
 dotnet run --project Pyramid.Web -- --urls http://localhost:5188 --environment Development --Pyramid:PathBase /pyramid
 ```
 
-Visit `http://localhost:5188/pyramid/`. Local data is created in `Pyramid.Web/App_Data` and is excluded from Git. Mail delivery needs separate configuration; no email credentials are included.
+Visit [https://digitalrcs.com/pyramid](https://digitalrcs.com/pyramid). For local development, open `http://localhost:5188/pyramid/`. Local data is created in `Pyramid.Web/App_Data` and is excluded from Git. Mail delivery needs separate configuration; no email credentials are included.
 
 On Windows, `BUILD-WEB.ps1` builds the client, runs the .NET checks and creates a publish directory. `RUN-WEB.ps1` starts the local server.
 
