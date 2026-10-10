@@ -1,0 +1,215 @@
+DIGITALRCS PYRAMID - PLAYER, API AND MOD GUIDE
+===========================================
+
+WELCOME
+This is an expanded text adventure inspired by the home-computer era.
+The original Python game is separate and unchanged. Chamber of the Gods
+contains six levels, eighteen relics and a final logic puzzle. Graphics
+are atmospheric gold pixel reliefs; the written descriptions govern play.
+There is no clock or guaranteed completion time. Every command is saved.
+
+SOLO PLAY
+Create an explorer account, or sign in to resume. Your original solo save
+remains separate from all shared expeditions. Other signed-in explorers
+can see your location, score and achievements, not your satchel or notes.
+GET LAMP, LIGHT LAMP and GET BOTTLE are useful first commands.
+N/S/E/W or GO EAST moves. LOOK repeats the room; GET <object> and DROP
+<object> move items. EXAMINE <thing>, READ TABLET, INVENTORY, MAP, JOURNAL,
+NOTE <text>, SCORE, SAVE and HELP are available. RETREAT returns to the
+current landing. Satchels hold eight objects. HINT costs five points.
+Collect three relics per level and DEPOSIT at the landing. Read the tablet
+in the study; solve the gate riddle with SAY <answer>, then ASCEND.
+At the final throne, use your five journal clues: SET <god> <1-5>, INVOKE.
+The order differs between expeditions. No puzzle answers are in this guide.
+
+EXPLORING TOGETHER
+Open EXPEDITIONS and create a named world. Choose Chamber of the Gods or
+an installed content pack. A private world is invitation-only. Opening
+join requests makes it visible to other signed-in explorers, but the host
+must approve each request. The invited explorer then accepts. Hosts invite
+existing accounts by exact explorer name. Up to eight explorers can join;
+each account may host up to ten saved worlds.
+
+Everyone has a separate location, satchel, journal and command transcript.
+Doors, floor objects, recovered relics, mechanisms and final arrangement
+belong to the shared world. Each entrant receives a personal lit lamp.
+One person can go east while another goes west. Players in the same room
+see arrivals and LOOK reports companions. The companion list updates every
+five seconds while the browser tab is visible; it is not instant chat.
+
+  SHARE ITEM bronze key WITH Mrs_Player
+  GET bronze key FROM Wayfarer
+  OFFERS
+  SHARE INFORMATION The inscription mentions the rising sun.
+  SHARE JOURNAL WITH Mrs_Player
+
+Use full item and explorer names. An item stays in its owner's satchel
+until accepted, and both players must be awake in the same room. You cannot
+take another person's possessions without an offer. Moving, switching
+worlds or signing out cancels your outstanding offers. Information reaches
+only awake companions in the room. Journal sharing copies up to the
+recipient's 100-note limit; private notes are shared too, so review first.
+Messages are plain text. The last 180 transcript entries are retained.
+
+Closing the tab leaves your explorer in a trance after 45 seconds;
+signing out or switching worlds does so immediately. Location and satchel
+persist. Resume that expedition to wake in the saved room. Important tools
+held by a sleeping player remain theirs: offer or drop shared tools before
+leaving for a long time. There is no forced inventory theft or kick command.
+In Chamber of the Gods, awake players gather at the gate to ASCEND;
+sleeping companions travel to the next landing with the group. This is the
+one intentional exception to resuming at the exact room where you left.
+Mod realms allow players to pass through portals independently.
+
+If two actions compete, one is rejected with a refreshed state. Review the
+new situation and retry; commands are never silently replayed. EXPEDITIONS
+lets you return to your original solo save or resume another shared world.
+
+JSON MODS: DATA, NOT EXECUTABLE PLUGINS
+The server administrator installs reviewed JSON files in ContentPacks,
+outside wwwroot, and restarts the app. Players cannot upload server code or
+install packs through the web UI. JSON can define rooms, directions, loose
+items, descriptive features, command puzzles, gates and portals. It cannot
+run scripts, access files, SQL, network services or change authentication.
+Anyone with the source can create and distribute packs for admin review.
+
+Included working examples (in the source and server publish package):
+  ContentPacks/oasis-of-stars.json     - standalone adventure
+  ContentPacks/oasis-moon-addon.json   - adds a realm and two-way portal
+
+Root fields:
+  schemaVersion: 1
+  id: unique lowercase identifier, letters/digits/dashes (starts a letter)
+  name: display name, up to 100 characters
+  startLevel: stable positive level number (default 1)
+  extends: optional base pack ID; used only by addon files
+  levels: array of realm definitions
+  portals: array of directional realm connections
+
+Level fields:
+  number, name, objective, start (room ID), rooms (object keyed by room ID),
+  puzzles (array), winFlags (array of puzzle flags marking realm completion).
+Room fields:
+  name, description, lit (default true), exits ({"west":"room-id"}),
+  requires ({"west":"flag"}), items (["bronze key"]),
+  features ({"inscription":"Descriptive text"}), image (optional).
+Image may reference room-art/room1.png through room-art/room60.png, or
+mod-art/<base-pack-id>/<scene-name>.png. Custom scene names use lowercase
+letters, digits and dashes, beginning with a letter. For source builds place
+reviewed PNGs in Client/public/mod-art/<base-pack-id>/; admins deploying
+content directly place them in wwwroot/mod-art/<base-pack-id>/. Keep custom
+assets in deployment backups. External URLs, SVG, traversal paths and
+arbitrary file reads are rejected. PNGs are optional; missing art does not
+prevent play. Artwork should not reveal puzzle solutions or private notes.
+
+Puzzle fields (names are case insensitive in JSON):
+  room, command, needs (carried items), requires (earlier local flags),
+  flag (unique result), response, hints (one to five strings).
+Commands and item names are lowercase; commands have single spaces and
+must not shadow built-in commands. Example command: "turn key".
+Successful puzzles set a flag once; they do not consume items. Requirement
+flags are local to that realm. Room exits and portal gates use those flags.
+Completion grants an achievement and permits continued exploration.
+
+Portal fields:
+  fromLevel, fromRoom, direction, toLevel, toRoom, requires (optional flag),
+  description. Directions: north, south, east, west, up, down.
+Create a reverse portal explicitly if players should return. A portal
+cannot replace an existing exit in the same direction. The example addon
+does not modify the original oasis file; it supplies new levels and portal
+definitions that are merged at startup. Packs are separate adventures;
+cross-pack travel and JSON overrides of the built-in six-level campaign
+are not supported in schema 1. Addons extend JSON adventures, not C# rules.
+
+Keep pack IDs, level numbers, room IDs and item/flag names stable after
+release. Additive new rooms are initialized without respawning previously
+collected items. Deleted/renamed rooms or removed packs may make a save
+unavailable; restore the matching content files. Saves are not discarded.
+Test both a fresh game and an existing save before installing an update.
+The loader rejects bad references, excessive sizes, unknown fields and
+unsafe asset paths, but cannot prove that your story is solvable. Playtest
+for circular dependencies, one-way traps and indispensable items held by
+offline players. Back up database, keys and exact content versions together.
+Limits: 1 MiB per file, 100 realms/pack, 100 rooms/realm, 100 puzzles/realm,
+200 portals/pack. Startup rejects an invalid pack with a diagnostic.
+
+HTTP API (v1, JSON; all paths relative to the application subfolder)
+GET  api/session          -> CSRF token, signed-in user, registration flag
+POST api/register         {name,email,password}; creates local explorer account
+POST api/login            {name,password}; name is verified email or explorer name
+POST api/logout           {}; ends session and puts explorer in trance
+GET  api/play             -> {game,party}; current personal projection
+POST api/play/command     {text,revision,expeditionId}; null ID means solo
+GET  api/explorers        -> public progress for recent signed-in explorers
+GET  api/expeditions      -> {active,games,packs}; no private puzzle solutions
+POST api/expeditions/create {name,pack,open} -> new expedition ID
+POST api/expeditions/action {id,action,target}
+
+Actions: resume, accept, decline, request, solo (empty id/target), open,
+close, invite (target=explorer name), approve/deny/revoke (target=user ID).
+Host-only actions are checked on the server. Approval creates an invitation
+for acceptance; it never switches another player's active game remotely.
+
+Keep the same session cookies. All POST requests, including login/register,
+require X-Pyramid-CSRF with the token from api/session. Refresh that token
+after signing in/out. Cookies are HttpOnly, SameSite=Strict, Secure in
+Production, and expire after eight hours. No API keys or cross-origin API
+access are provided. Never put passwords or session cookies in URLs.
+
+Use game.revision and party.id from the most recent api/play. HTTP 409
+command responses include {error,play} containing the current state. Never
+blindly retry a mutation. HTTP 400 indicates validation, 401 sign-in needed,
+403 closed registration, and 429 rate limiting. Poll no faster than the
+bundled client's five seconds; the per-account limit is 120 requests/minute.
+Legacy api/game and api/command remain original-solo-only endpoints.
+
+LOCAL TESTING AND PRODUCTION
+Run RUN-WEB.ps1 for local Development only. BUILD-WEB.ps1 builds the client,
+runs automated checks and publishes server files. See DEPLOY-IIS.txt for
+Windows and DEPLOY-LINODE.txt for the future Linux production checklist.
+SQLite is the included transactional database; SQL Server is not required.
+Use one application instance with local disk, private data and persistent
+keys. Production on digitalrcs.com has not been deployed or tested by these
+local checks. Email recovery and an administrator console are included; see ACCOUNTS-AND-EMAIL.txt for operator setup.
+
+
+EXPLORATION AND COOPERATION UPDATE
+Opening-screen HOW TO PLAY explains getting started without signing in.
+EXPEDITIONS now has a saved/invited/open world dropdown. Invite an online
+explorer from the selector or enter an existing account name, even offline.
+An invitation is optional at creation: the host starts immediately and
+companions can accept later. An invalid invitation does not discard the
+newly created world.
+CLEAR erases only your saved command transcript, not your journal or game.
+MAP now costs 2 points each opening. The gold schematic contains only your
+visited rooms and connections between them in the current realm. It is a
+paid snapshot, not a live location tracker; no unexplored nodes appear.
+Room-entry chimes signal visible items, unfinished puzzles or authored
+features. CHIMES ON/OFF stores your sound preference in this browser.
+
+BONUS POINTS
++1 per newly discovered non-starting room; +10 for fully surveying a realm.
++5 to an item giver after acceptance, once per distinct non-lamp item, up
+ to three rewarded items per level/realm per giver.
++3 for your first journal share that adds new information to a companion,
+ once per expedition. Unchanged notes and chat messages earn no bonuses.
+Rewards and map costs survive saves. Repeated visits or passing the same
+item back cannot repeatedly reward the same giver. Costs accrue at zero
+score and are offset by later earnings, as with hints.
+API play.game adds mapsUsed, bonusPoints, roomActivity and mapSnapshot.
+mapSnapshot is null before MAP; after payment it includes serial, realm,
+currentRoom, nodes [{id,name}] and edges [{from,to,direction}]. Only current
+realm rooms personally visited are included. In co-op the costs/rewards,
+visited history and transcript are personal, not shared with teammates.
+
+
+ACCOUNTS AND EMAIL
+New accounts provide an email plus an explorer name. Confirm the emailed
+verification link to enable email sign-in, password resets and invitations.
+Existing explorers may still sign in by username and add email in Account.
+Forgot password sends a single-use reset link; passwords cannot be retrieved.
+Account controls optional invitation/information emails. An invitation link
+opens the expedition selector; you must still sign in and accept.
+Admins can kick sessions, suspend/restore access, delete accounts with typed
+confirmation, review activity and email verified explorers. Administrators
+are assigned by the server operator, never automatically at registration.

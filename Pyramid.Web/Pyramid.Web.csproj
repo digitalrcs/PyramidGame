@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+  <ItemGroup><PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" /><PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" /></ItemGroup>
+  <ItemGroup><PackageReference Include="MailKit" Version="4.17.0" /></ItemGroup>
+  <ItemGroup><Content Remove="App_Data\**;Client\**;design\**;publish\**" /><None Remove="App_Data\**;Client\node_modules\**;publish\**" /></ItemGroup>
+  <ItemGroup><Content Update="ContentPacks\**\*.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+</Project>

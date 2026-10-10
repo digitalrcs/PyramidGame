@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily DigitalRCS Pyramid backup
+[Timer]
+OnCalendar=*-*-* 04:25:00 UTC
+RandomizedDelaySec=300
+Persistent=true
+[Install]
+WantedBy=timers.target

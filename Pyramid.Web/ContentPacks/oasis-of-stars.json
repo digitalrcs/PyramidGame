@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "id": "oasis-of-stars",
+  "name": "The Oasis of Stars",
+  "startLevel": 1,
+  "levels": [
+    {
+      "number": 1,
+      "name": "The Forgotten Oasis",
+      "objective": "Find the bronze key and open the eastern portal.",
+      "start": "camp",
+      "rooms": {
+        "camp": {
+          "name": "Caravan camp",
+          "description": "A brazier lights your camp. West is a ruined well. East stands a sealed stone arch. A tablet invites you to explore together.",
+          "exits": {
+            "west": "well",
+            "east": "arch"
+          },
+          "items": [],
+          "features": {
+            "tablet": "One explorer can fetch the key while another studies the arch. Meet to SHARE ITEM bronze key WITH <name>."
+          },
+          "image": "room-art/room1.png"
+        },
+        "well": {
+          "name": "Dry well",
+          "description": "A bronze key lies among the reeds. The camp lies east.",
+          "exits": {
+            "east": "camp"
+          },
+          "items": [
+            "bronze key"
+          ],
+          "image": "room-art/room5.png"
+        },
+        "arch": {
+          "name": "Portal arch",
+          "description": "An empty keyhole marks the arch. The inscription reads: TURN KEY, then follow the eastern portal.",
+          "exits": {
+            "west": "camp"
+          },
+          "features": {
+            "inscription": "The bronze key turns the portal's lock."
+          },
+          "image": "room-art/room10.png"
+        }
+      },
+      "puzzles": [
+        {
+          "room": "arch",
+          "command": "turn key",
+          "needs": [
+            "bronze key"
+          ],
+          "requires": [],
+          "flag": "portal-open",
+          "response": "The arch fills with starlight. A portal opens east.",
+          "hints": [
+            "Find the key by the well.",
+            "Carry the bronze key to the arch.",
+            "TURN KEY at the arch."
+          ]
+        }
+      ],
+      "winFlags": []
+    }
+  ],
+  "portals": []
+}

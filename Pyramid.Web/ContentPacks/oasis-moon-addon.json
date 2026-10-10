@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "oasis-moon-addon",
+  "extends": "oasis-of-stars",
+  "name": "The Moon Realm extension",
+  "levels": [
+    {
+      "number": 2,
+      "name": "The Moon Realm",
+      "objective": "Restore the moon's voice, then return through the portal.",
+      "start": "landing",
+      "rooms": {
+        "landing": {
+          "name": "Moonlit landing",
+          "description": "A silver desert stretches east. The western portal returns to the oasis.",
+          "exits": {
+            "east": "temple"
+          },
+          "image": "room-art/room21.png"
+        },
+        "temple": {
+          "name": "Temple of the Moon",
+          "description": "A silver bell hangs in silence. Its inscription asks you to RING BELL.",
+          "exits": {
+            "west": "landing"
+          },
+          "features": {
+            "bell": "No tool is needed. The bell waits for a human hand."
+          },
+          "image": "room-art/room33.png"
+        }
+      },
+      "puzzles": [
+        {
+          "room": "temple",
+          "command": "ring bell",
+          "needs": [],
+          "requires": [],
+          "flag": "moon-awake",
+          "response": "Silver notes cross the desert. The moon remembers its voice.",
+          "hints": [
+            "Read the bell's inscription.",
+            "The bell needs no tool.",
+            "RING BELL."
+          ]
+        }
+      ],
+      "winFlags": [
+        "moon-awake"
+      ]
+    }
+  ],
+  "portals": [
+    {
+      "fromLevel": 1,
+      "fromRoom": "arch",
+      "direction": "east",
+      "toLevel": 2,
+      "toRoom": "landing",
+      "requires": "portal-open",
+      "description": "A star-filled portal is set into the eastern arch."
+    },
+    {
+      "fromLevel": 2,
+      "fromRoom": "landing",
+      "direction": "west",
+      "toLevel": 1,
+      "toRoom": "arch",
+      "description": "The western portal shows the familiar oasis."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+[Unit]
+Description=DigitalRCS Pyramid adventure
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pyramid
+Group=pyramid
+WorkingDirectory=/opt/digitalrcs-pyramid/current
+ExecStart=/opt/digitalrcs-pyramid/current/Pyramid.Web
+EnvironmentFile=/etc/digitalrcs-pyramid.env
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/digitalrcs-pyramid
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+MemoryHigh=384M
+MemoryMax=512M
+TasksMax=128
+SyslogIdentifier=digitalrcs-pyramid
+
+[Install]
+WantedBy=multi-user.target

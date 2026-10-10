@@ -1,0 +1,482 @@
+[
+  {
+    "number": 1,
+    "level": 1,
+    "roomId": "camp",
+    "name": "Desert threshold",
+    "file": "room1.png",
+    "sha256": "5ed41b9af55af77ea75fc8f88c1f9a517b07402ecd6a532c1b3f3f7fde656636"
+  },
+  {
+    "number": 2,
+    "level": 1,
+    "roomId": "hub",
+    "name": "Hall of dust",
+    "file": "room2.png",
+    "sha256": "b6e3ea100044b64b45843c2e83047b01552a294845a3403ea33f1522a5c23d98"
+  },
+  {
+    "number": 3,
+    "level": 1,
+    "roomId": "west",
+    "name": "Star basin",
+    "file": "room3.png",
+    "sha256": "63b76ea9f16d55fc0da0e1d0d041cf0572bbe8cbbca3f44da89a451134ca1e7b"
+  },
+  {
+    "number": 4,
+    "level": 1,
+    "roomId": "west-shrine",
+    "name": "River shrine",
+    "file": "room4.png",
+    "sha256": "3ff84ebe2c7923a1b10558ebecec0228553a94941a45e1bc80a19faed2d004ad"
+  },
+  {
+    "number": 5,
+    "level": 1,
+    "roomId": "east",
+    "name": "Cistern of reeds",
+    "file": "room5.png",
+    "sha256": "0f42cdb20716431b0b72a815fc6411b5dfb82c1baa496854b1be5b5a536d0e3d"
+  },
+  {
+    "number": 6,
+    "level": 1,
+    "roomId": "east-shrine",
+    "name": "Ibis sanctuary",
+    "file": "room6.png",
+    "sha256": "584c71e92be18f44be6d9a8afdf9bd9643750607b5b8c2fbf1e72ecbedc38b69"
+  },
+  {
+    "number": 7,
+    "level": 1,
+    "roomId": "gallery",
+    "name": "Broken crossing",
+    "file": "room7.png",
+    "sha256": "f289037079e090e347d5fe653bec277f5c731a8109c2ab52a70e9be75fdbfe0d"
+  },
+  {
+    "number": 8,
+    "level": 1,
+    "roomId": "study",
+    "name": "Scribe's alcove",
+    "file": "room8.png",
+    "sha256": "b75909e3000c6c6b69db511890b2cd2436b5259d45dd25e0c5fd8cd15299645e"
+  },
+  {
+    "number": 9,
+    "level": 1,
+    "roomId": "north-shrine",
+    "name": "Sun terrace",
+    "file": "room9.png",
+    "sha256": "f42e251c463c948f0b089b15f97d867459b2ae462ac018fc43bfee57491755b4"
+  },
+  {
+    "number": 10,
+    "level": 1,
+    "roomId": "gate",
+    "name": "Buried gate",
+    "file": "room10.png",
+    "sha256": "9de2d7d094ed1f0c098da79d8835fd83a60504dbd0c7f22ab2bd9b5d559b9761"
+  },
+  {
+    "number": 11,
+    "level": 2,
+    "roomId": "camp",
+    "name": "Archive landing",
+    "file": "room11.png",
+    "sha256": "c280121ba2a1bd36ba4c99b0dc36c4cfb403b84d461402dcc95ba08e894cede4"
+  },
+  {
+    "number": 12,
+    "level": 2,
+    "roomId": "hub",
+    "name": "Hall of currents",
+    "file": "room12.png",
+    "sha256": "bbaeaae08daaa6ee28c4502cc63025f20606d0c4aebea2443e81a1160dc0fe80"
+  },
+  {
+    "number": 13,
+    "level": 2,
+    "roomId": "west",
+    "name": "Sluice works",
+    "file": "room13.png",
+    "sha256": "b4ca0ca3e5a703024be3d3d2ad29b825d55969b7eac26f7adbfe0b97ca6494d9"
+  },
+  {
+    "number": 14,
+    "level": 2,
+    "roomId": "west-shrine",
+    "name": "Flooded stacks",
+    "file": "room14.png",
+    "sha256": "3a69bef516a0a54f33b6de4f80c0f4d5e63020ebfe02b05cd2264b7f152f44cb"
+  },
+  {
+    "number": 15,
+    "level": 2,
+    "roomId": "east",
+    "name": "Weighing room",
+    "file": "room15.png",
+    "sha256": "bf4a6311161346f2b8d0bf6b13878d0f2500024376ff639c03a5347d4d2766eb"
+  },
+  {
+    "number": 16,
+    "level": 2,
+    "roomId": "east-shrine",
+    "name": "Heron's vault",
+    "file": "room16.png",
+    "sha256": "98e12075ca5f67787c2bb4bc4e8a4d710def264e3a98a375087e8e723e1c8c7c"
+  },
+  {
+    "number": 17,
+    "level": 2,
+    "roomId": "gallery",
+    "name": "Canal bridge",
+    "file": "room17.png",
+    "sha256": "9c1958dd6d16603e3839992480f1226add9e7dc5599781c25310e4aab00300a5"
+  },
+  {
+    "number": 18,
+    "level": 2,
+    "roomId": "study",
+    "name": "Keeper's study",
+    "file": "room18.png",
+    "sha256": "6a80867539b9f4ff3abcea09aac693e97a674c58eb2b974c63ab839031f806d8"
+  },
+  {
+    "number": 19,
+    "level": 2,
+    "roomId": "north-shrine",
+    "name": "Crystal grotto",
+    "file": "room19.png",
+    "sha256": "ada848d5107a4a6e0aeec366498f631a2551162f8f80488b0fff50373da636b6"
+  },
+  {
+    "number": 20,
+    "level": 2,
+    "roomId": "gate",
+    "name": "Archive stair",
+    "file": "room20.png",
+    "sha256": "ce13807fd2feac834cacf0e5e44fddb7864e990145d6519a51ba38000ff8981e"
+  },
+  {
+    "number": 21,
+    "level": 3,
+    "roomId": "camp",
+    "name": "Observatory landing",
+    "file": "room21.png",
+    "sha256": "8ef16a89f55033b2f35061dba05c2a7a618c1beac5e6b280084d812932657c55"
+  },
+  {
+    "number": 22,
+    "level": 3,
+    "roomId": "hub",
+    "name": "Hall of dusk",
+    "file": "room22.png",
+    "sha256": "270d243eb823467d73c5a064e3201fc50e8d07f3cbaa992e06a74c6cfd734e02"
+  },
+  {
+    "number": 23,
+    "level": 3,
+    "roomId": "west",
+    "name": "Mirror workshop",
+    "file": "room23.png",
+    "sha256": "53847b54f6c2c0fbcd896a275ada56e78057ee1fa1d75f49dd924f9abdc51ec3"
+  },
+  {
+    "number": 24,
+    "level": 3,
+    "roomId": "west-shrine",
+    "name": "Lunar shrine",
+    "file": "room24.png",
+    "sha256": "28ee01e4cf7cd8fd534f911798d3293f7e7e4b5f5551ae0b44f723162493494c"
+  },
+  {
+    "number": 25,
+    "level": 3,
+    "roomId": "east",
+    "name": "Star engine",
+    "file": "room25.png",
+    "sha256": "a1a5abe8736521759fb214ac103a4af63c35526a785050985b1fb079f960d692"
+  },
+  {
+    "number": 26,
+    "level": 3,
+    "roomId": "east-shrine",
+    "name": "Sapphire dome",
+    "file": "room26.png",
+    "sha256": "82e625d069d40b2e15fdf3d27560dbf1243f9b71ed0e2cb541e09b2b1f5da055"
+  },
+  {
+    "number": 27,
+    "level": 3,
+    "roomId": "gallery",
+    "name": "Light well",
+    "file": "room27.png",
+    "sha256": "5865a0275a5526cf7024e0c69241d621f8a5f9f8491e5861cf2b386ab7cde1c1"
+  },
+  {
+    "number": 28,
+    "level": 3,
+    "roomId": "study",
+    "name": "Astronomer's study",
+    "file": "room28.png",
+    "sha256": "ac5f2858e209c394012c52cd69fedaf39939198653ba3229964c9ca7647c0ce4"
+  },
+  {
+    "number": 29,
+    "level": 3,
+    "roomId": "north-shrine",
+    "name": "Eye chamber",
+    "file": "room29.png",
+    "sha256": "fcd8a6199b8998add337a895f02f0ff2537dacf449b8fa0ece63de6515ecaea1"
+  },
+  {
+    "number": 30,
+    "level": 3,
+    "roomId": "gate",
+    "name": "Stair of eclipses",
+    "file": "room30.png",
+    "sha256": "323554f1c90e9683f9966e57f6048343ba05fcb83f30f19d2323b7e244a7c42d"
+  },
+  {
+    "number": 31,
+    "level": 4,
+    "roomId": "camp",
+    "name": "Echo landing",
+    "file": "room31.png",
+    "sha256": "42396beb9ccdb5c30c1fd5489a1a7155e2157f420e5ca1fbd7034638b72246fd"
+  },
+  {
+    "number": 32,
+    "level": 4,
+    "roomId": "hub",
+    "name": "Whispering hall",
+    "file": "room32.png",
+    "sha256": "ba59f58a2e9afa64f9151c35a5820ee0dae7284aa6958e07f0d6e23a414bba04"
+  },
+  {
+    "number": 33,
+    "level": 4,
+    "roomId": "west",
+    "name": "Bell chamber",
+    "file": "room33.png",
+    "sha256": "b49fea7c842ddf32931e3178f748d43b3c7946afd5a6e68d05b1365ca0f237b8"
+  },
+  {
+    "number": 34,
+    "level": 4,
+    "roomId": "west-shrine",
+    "name": "Mask vault",
+    "file": "room34.png",
+    "sha256": "76de0100576ac60e2db1317ef997e126ed628519dd361b750a9b64e7b2344d60"
+  },
+  {
+    "number": 35,
+    "level": 4,
+    "roomId": "east",
+    "name": "Reed door",
+    "file": "room35.png",
+    "sha256": "25ff39d80e58b6a1492e8af6d98f5dd6328c595b6ea799ef5c355432c1bef310"
+  },
+  {
+    "number": 36,
+    "level": 4,
+    "roomId": "east-shrine",
+    "name": "Musician's tomb",
+    "file": "room36.png",
+    "sha256": "b79f99e25a4e21fe7ac9bdaf7989359e9619e48f5ccdda7d10e1d5fcb6050472"
+  },
+  {
+    "number": 37,
+    "level": 4,
+    "roomId": "gallery",
+    "name": "Echo crossing",
+    "file": "room37.png",
+    "sha256": "4cd871bcd0c8cc7cb431b31bb23506dc81d27e394b6fa131954916600ba58a4c"
+  },
+  {
+    "number": 38,
+    "level": 4,
+    "roomId": "study",
+    "name": "Silent study",
+    "file": "room38.png",
+    "sha256": "b87518be6df6510dc2b01c3118803814f9b52f442566c46c38460228115836b3"
+  },
+  {
+    "number": 39,
+    "level": 4,
+    "roomId": "north-shrine",
+    "name": "Pearl niche",
+    "file": "room39.png",
+    "sha256": "097646cc0266b6e51e1cac8ac1c5f46b0c5b2d7deda3717622ad83a02c7d0179"
+  },
+  {
+    "number": 40,
+    "level": 4,
+    "roomId": "gate",
+    "name": "Hushed stair",
+    "file": "room40.png",
+    "sha256": "eb85fc76106f8f0f0499f088c9c665601159c8a9ea88d55325e157d840f79741"
+  },
+  {
+    "number": 41,
+    "level": 5,
+    "roomId": "camp",
+    "name": "Judgment landing",
+    "file": "room41.png",
+    "sha256": "c849a1c1322bbd69364644292654a391a7d9891d4f72fa69f83732522981da75"
+  },
+  {
+    "number": 42,
+    "level": 5,
+    "roomId": "hub",
+    "name": "Hall of witnesses",
+    "file": "room42.png",
+    "sha256": "6542c85e51e8b0d5bd973756f3f4238adc218782545059567a7ec5f02426f661"
+  },
+  {
+    "number": 43,
+    "level": 5,
+    "roomId": "west",
+    "name": "Heart scales",
+    "file": "room43.png",
+    "sha256": "098859fa67d3438ce90e888378c8f8f69def687b80bf63853cf0833821f18d67"
+  },
+  {
+    "number": 44,
+    "level": 5,
+    "roomId": "west-shrine",
+    "name": "Jade sanctuary",
+    "file": "room44.png",
+    "sha256": "b5013580b2ed356c1bc787001a6c5b3370c77c74f52d0952be1f3dcb58597d7d"
+  },
+  {
+    "number": 45,
+    "level": 5,
+    "roomId": "east",
+    "name": "Veiled doorway",
+    "file": "room45.png",
+    "sha256": "2d21d4dda2c2778529d0b073a93d883d140ed132b0b0b32453bf5a795564da13"
+  },
+  {
+    "number": 46,
+    "level": 5,
+    "roomId": "east-shrine",
+    "name": "Royal crypt",
+    "file": "room46.png",
+    "sha256": "53fb189ba3f6825f297bb34623b90a3d85277294965e456ca3921b962007ed21"
+  },
+  {
+    "number": 47,
+    "level": 5,
+    "roomId": "gallery",
+    "name": "Serpent passage",
+    "file": "room47.png",
+    "sha256": "c6f9a68c73c6e2d8343aebea6799c771e55b5a3bec71a75bfe3d29adfe711df2"
+  },
+  {
+    "number": 48,
+    "level": 5,
+    "roomId": "study",
+    "name": "Judge's study",
+    "file": "room48.png",
+    "sha256": "612b70efc1010ee8d582b711eb57328efabe465fa0478a617997c9bf8bdd4197"
+  },
+  {
+    "number": 49,
+    "level": 5,
+    "roomId": "north-shrine",
+    "name": "Crown shrine",
+    "file": "room49.png",
+    "sha256": "12e6bcb05e24c418c1e1f8836ec08f576c1bdf42ca826ac3bfb26ff0abb2c5f4"
+  },
+  {
+    "number": 50,
+    "level": 5,
+    "roomId": "gate",
+    "name": "Final ascent",
+    "file": "room50.png",
+    "sha256": "8246b124cd9871854f76b822e56fe9faa4be32f10fb7f62745607a4a43edd428"
+  },
+  {
+    "number": 51,
+    "level": 6,
+    "roomId": "camp",
+    "name": "Gods' threshold",
+    "file": "room51.png",
+    "sha256": "cfef318dddbc41b9598a1c38f6f910b136d648d053aec73b632b23792721cf95"
+  },
+  {
+    "number": 52,
+    "level": 6,
+    "roomId": "hub",
+    "name": "Hall of five names",
+    "file": "room52.png",
+    "sha256": "ab30698af4dd823cc15f035aceeec9b00227abb1d6eed88c0df7d55ff1a9c7fc"
+  },
+  {
+    "number": 53,
+    "level": 6,
+    "roomId": "west",
+    "name": "Scales of eternity",
+    "file": "room53.png",
+    "sha256": "e749c94bc6063ecf6cddd7d1aa056c6868eef3832653366ed189f8f8ef0f0acf"
+  },
+  {
+    "number": 54,
+    "level": 6,
+    "roomId": "west-shrine",
+    "name": "Feather shrine",
+    "file": "room54.png",
+    "sha256": "9e1aa03456790f6b4b82788ee31b50f177a1e33d0b0b28a268a91ef9c8ddf81f"
+  },
+  {
+    "number": 55,
+    "level": 6,
+    "roomId": "east",
+    "name": "Ankh mechanism",
+    "file": "room55.png",
+    "sha256": "8c1324d481a375f7e4e3a3298ab06118d17abfa2b93d80bac2a38d3ebcee00cf"
+  },
+  {
+    "number": 56,
+    "level": 6,
+    "roomId": "east-shrine",
+    "name": "Chamber of ages",
+    "file": "room56.png",
+    "sha256": "07d588a2c845bb85a7aa4bfcaf1755be96ca33430aaf35de935c198ba4953ec8"
+  },
+  {
+    "number": 57,
+    "level": 6,
+    "roomId": "gallery",
+    "name": "Solar passage",
+    "file": "room57.png",
+    "sha256": "7c97915f66061fcad29f123d5601136a8bc51c9c62b8e5d7c012d224bd3b3b46"
+  },
+  {
+    "number": 58,
+    "level": 6,
+    "roomId": "study",
+    "name": "Divine archive",
+    "file": "room58.png",
+    "sha256": "4edf3a4801098c95cb5530e4dfd686de8baf1eb77c4c2f2cc2aca9c4ffb09e38"
+  },
+  {
+    "number": 59,
+    "level": 6,
+    "roomId": "north-shrine",
+    "name": "Heart of the sun",
+    "file": "room59.png",
+    "sha256": "03932c9bcea9cc20e88889905a08e3e89838b2e0a0ee2217546c4b660ca9e4bc"
+  },
+  {
+    "number": 60,
+    "level": 6,
+    "roomId": "gate",
+    "name": "Throne of the gods",
+    "file": "room60.png",
+    "sha256": "9ef7a1d812900c4220255aa58ea16eb500af1521e159f0ded1d8cea12762e047"
+  }
+]

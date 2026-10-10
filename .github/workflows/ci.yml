@@ -1,0 +1,49 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Pyramid.Web/Client/package-lock.json
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: Pyramid.Web/Client
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: Pyramid.Web/Client
+
+      - name: Check engine and storage
+        run: dotnet run --project Pyramid.Tests -c Release
+
+      - name: Check Python edition
+        run: python -m unittest test_pyramid2000.py

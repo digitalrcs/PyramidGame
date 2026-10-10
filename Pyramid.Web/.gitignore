@@ -1,0 +1,7 @@
+bin/
+obj/
+App_Data/
+Client/node_modules/
+wwwroot/
+publish/
+*.user

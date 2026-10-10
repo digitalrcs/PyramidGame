@@ -1,0 +1,42 @@
+# Build output and dependencies
+**/bin/
+**/obj/
+**/node_modules/
+**/__pycache__/
+*.pyc
+Pyramid.Web/wwwroot/
+Pyramid.Web/design/
+artifacts/
+
+# Private runtime data and local configuration
+**/App_Data/
+**/keys/
+**/mail-drop/
+*.db
+*.db-*
+*.sqlite*
+*.pfx
+*.p12
+*.pem
+*.key
+*.env
+.env*
+!*.env.example
+**/appsettings.*.json
+!**/appsettings.Example.json
+*.user
+*.suo
+.vs/
+.vscode/
+pyramid-save.json
+
+# Local handoffs, deployment records, and binary packages
+/*.txt
+/*.zip
+/*.sha256
+/RUN-LOCAL-MAIL.ps1
+/deploy/activate-pyramid.py
+/deploy/install-pyramid.sh
+/deploy/production-smoke.py
+/deploy/production-test-accounts.py
+/ImagesForGame/

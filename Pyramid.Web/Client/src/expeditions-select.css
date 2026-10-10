@@ -1,0 +1,7 @@
+.expeditions select{min-width:0;max-width:100%;text-overflow:ellipsis}
+.expedition-actions{display:flex;flex-wrap:wrap;gap:8px}
+.expedition-notice{border-left:2px solid var(--gold);padding-left:12px;color:var(--gold)}
+.expeditions .invite-note{font-size:11px;margin:8px 0 14px;line-height:1.7}
+.expeditions .join-request{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
+.expeditions .join-request p{margin-bottom:8px}
+.expeditions .world-row p{margin-bottom:12px}
