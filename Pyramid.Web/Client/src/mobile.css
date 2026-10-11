@@ -1,0 +1,66 @@
+.mobile-menu{display:none}
+/* Phone and tablet presentation is isolated from the desktop layout. */
+@media(max-width:800px){
+ body{overflow-x:hidden}
+ button,summary{touch-action:manipulation}
+ button,input,select,textarea{min-height:44px}
+ input,select,textarea,.auth-panel input,.command-input input,.expeditions input:not([type=checkbox]),.expeditions select{font-size:16px}
+ .masthead{height:64px;min-height:64px;flex-wrap:nowrap;padding:0 16px;gap:12px}
+ .masthead .edition{display:none}
+ .masthead-right{display:none}
+ .mobile-menu{display:block;margin-left:auto;position:relative;z-index:15}
+ .mobile-menu summary{cursor:pointer;min-height:44px;display:flex;align-items:center;padding:0 12px;color:var(--gold);border:1px solid var(--line);list-style:none}
+ .mobile-menu summary::-webkit-details-marker{display:none}
+ .mobile-menu nav{position:absolute;right:0;top:calc(100% + 8px);width:min(280px,calc(100vw - 32px));padding:10px;background:#171914;border:1px solid var(--gold);box-shadow:0 12px 32px #0009}
+ .mobile-menu nav>*{display:flex;align-items:center;text-align:left;min-height:48px;width:100%;padding:10px;color:var(--gold);font-size:12px;text-decoration:none;border:0}
+ .mobile-tabs{position:fixed;bottom:0;left:0;right:0;z-index:10;background:#171914;border-top:1px solid var(--line);border-bottom:0;padding-bottom:env(safe-area-inset-bottom,0px);display:flex}
+ .mobile-tabs button{min-width:0;min-height:60px;padding:8px 2px;border:0;border-top:2px solid transparent;font-size:10px;letter-spacing:0;text-transform:none;line-height:1.6}
+ .mobile-tabs .active{border-top-color:var(--gold);border-bottom:0;background:#23251c}
+ .mobile-tabs span{display:block;color:var(--muted);font-size:9px}
+ .game-layout{min-height:calc(100dvh - 124px);padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+ .terminal{height:calc(100dvh - 124px - env(safe-area-inset-bottom,0px));min-height:480px;padding:12px 16px}
+ .game-layout .terminal{box-sizing:border-box}
+ .game-layout~footer{display:none}
+ .level-heading-row{min-height:76px;margin-bottom:10px;gap:8px}
+ .level-title h1{font-size:25px}
+ .journey{padding-bottom:10px;margin-bottom:10px;flex-shrink:0}
+ .stage{min-width:0}
+ .stage small{display:none}
+ .stage.active small{display:block;position:absolute;left:50%;transform:translateX(-50%);width:100px;max-width:100px;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .stage:first-child.active small{left:0;transform:none;text-align:left}
+ .stage:last-child.active small{left:auto;right:0;transform:none;text-align:right}
+ .journey{padding-bottom:22px}
+ .stage>span{margin-bottom:3px}
+ .transcript{min-height:80px;padding-right:4px;overscroll-behavior:contain}
+ .transcript p{font-size:12px;letter-spacing:.2px;margin-bottom:18px}
+ .transcript .command{margin-top:18px}
+ .command-area{padding-top:8px}
+ .command-input input{padding:12px 8px}
+ .command-form .primary{padding:10px 13px;font-size:11px}
+ .shortcuts{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:6px;margin-top:8px;padding-bottom:2px}
+ .shortcuts button{flex:none;min-height:44px;font-size:10px;padding:8px 11px}
+ .room-notice{margin:4px 0}
+ .party-strip{max-height:58px;font-size:10px;padding:4px 0;margin-bottom:8px}
+ .explorer-rail,.expedition-rail{padding:20px 18px}
+ .inventory button{min-height:44px;padding:10px 0;font-size:14px;width:100%}
+ .journal-button{margin-top:8px;min-height:48px}
+ .rail-heading{align-items:center;flex-wrap:nowrap;gap:10px}
+ .rail-heading h2{margin:0;font-size:21px}
+ .rail-heading button{flex:none}
+ .journal,.journal.expeditions,.journal.exploration-map{width:100%;max-width:100%;height:100dvh;max-height:100dvh;margin:0;border:0;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain}
+ .journal>.rail-heading{position:sticky;top:-20px;z-index:2;background:#171914;padding:12px 0;border-bottom:1px solid var(--line);margin-bottom:18px}
+ .journal p,.journal li{overflow-wrap:anywhere}
+ .welcome{padding:28px 22px}
+ .help-links a{display:flex;align-items:center;min-height:44px}
+ .welcome-support a{min-height:44px}
+ .auth-panel .text-button{min-height:44px}
+ .error-banner{overflow-wrap:anywhere}
+ .error-banner button{flex:none}
+}
+@media(max-width:800px) and (max-height:600px){
+ .terminal{min-height:340px}
+ .level-heading-row{min-height:0;margin-bottom:8px}
+ .level-title h1{font-size:20px;margin-top:3px}
+ .room-art,.journey,.party-strip{display:none}
+ .shortcuts{margin-top:4px}
+}

@@ -7,43 +7,203 @@
     {
       "number": 1,
       "name": "The Forgotten Oasis",
-      "objective": "Find the bronze key and open the eastern portal.",
+      "objective": "Restore the buried spring and recover its water seal before following the stars.",
       "start": "camp",
       "rooms": {
         "camp": {
           "name": "Caravan camp",
-          "description": "A brazier lights your camp. West is a ruined well. East stands a sealed stone arch. A tablet invites you to explore together.",
+          "description": "A cold brazier stands beneath a sky without a dawn. West is a ruined well; east is a stone arch; north stands a deserted workshop. A tablet tells why the oasis sleeps.",
           "exits": {
             "west": "well",
-            "east": "arch"
+            "east": "arch",
+            "north": "workshop"
           },
           "items": [],
           "features": {
-            "tablet": "One explorer can fetch the key while another studies the arch. Meet to SHARE ITEM bronze key WITH <name>."
+            "tablet": "The moon has lost its voice and the dawn its memory. Carry the WATER SEAL of the living spring and the MOON SHARD of the silver bridge to the dawn. You may travel alone or meet companions to SHARE ITEM <item> WITH <name>."
           },
           "image": "room-art/room1.png"
         },
         "well": {
           "name": "Dry well",
-          "description": "A bronze key lies among the reeds. The camp lies east.",
+          "description": "Dry reeds fringe the ruined well. A stair descends into the cistern. The camp lies east. Three reeds are carved beside a wheel.",
           "exits": {
-            "east": "camp"
+            "east": "camp",
+            "down": "cistern"
           },
           "items": [
             "bronze key"
           ],
-          "image": "room-art/room5.png"
+          "features": {
+            "reeds": "The spring keeper carved: AFTER FITTING THE CRANK, TURN WHEEL EAST. Water follows the rising sun."
+          },
+          "image": "room-art/room5.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "water-flowing"
+              ],
+              "description": "Clear water ripples below the old well. A stair descends beside the restored flow into the cistern. The camp lies east. Three reeds are carved beside a wheel."
+            }
+          ],
+          "exitKinds": {
+            "down": "stairs"
+          }
         },
         "arch": {
           "name": "Portal arch",
-          "description": "An empty keyhole marks the arch. The inscription reads: TURN KEY, then follow the eastern portal.",
+          "description": "A keyhole marks the sealed arch. Its inscription reads: TURN KEY, then follow the eastern portal. A warning says the dawn will need the water seal even if the arch opens without it.",
           "exits": {
             "west": "camp"
           },
+          "items": [],
           "features": {
-            "inscription": "The bronze key turns the portal's lock."
+            "inscription": "Carry the bronze key and TURN KEY. Return whenever you wish; the oasis remembers your work."
           },
-          "image": "room-art/room10.png"
+          "image": "room-art/room10.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "portal-open"
+              ],
+              "description": "Starlight fills the unlocked arch. The eastern portal leads to the Moon Realm; the camp lies west. A warning says the dawn will need the water seal.",
+              "features": {
+                "inscription": "The bronze key has unlocked the arch. The portal remains open."
+              }
+            }
+          ]
+        },
+        "workshop": {
+          "name": "Spring keeper workshop",
+          "description": "A broken drawing board stands among the spring keeper tools. The camp is south. A plan shows the cistern below the well.",
+          "exits": {
+            "south": "camp"
+          },
+          "items": [
+            "brass crank"
+          ],
+          "features": {
+            "plan": "The cistern spindle has no handle. FIT CRANK there, then enter the sluice to the east. Neither the key nor the crank is needed after its mechanism is settled."
+          },
+          "image": "room-art/room3.png"
+        },
+        "cistern": {
+          "name": "Buried cistern",
+          "description": "A bare spindle locks a grate to the east. Daylight enters through the stair above. Marks around the spindle read FIT CRANK.",
+          "exits": {
+            "up": "well",
+            "east": "sluice"
+          },
+          "items": [],
+          "features": {
+            "spindle": "Carry the brass crank from the workshop and FIT CRANK to release the eastern grate."
+          },
+          "image": "room-art/room12.png",
+          "requires": {
+            "east": "crank-fitted"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "crank-fitted"
+              ],
+              "description": "The spindle mechanism is settled and the eastern grate stands open. Daylight enters through the stair above."
+            },
+            {
+              "requires": [
+                "water-flowing"
+              ],
+              "description": "Clear water fills the cistern channels. The eastern grate remains open; the stair above returns to the well.",
+              "features": {
+                "spindle": "The spindle mechanism is settled. The eastern grate remains open."
+              }
+            }
+          ],
+          "exitKinds": {
+            "up": "stairs"
+          }
+        },
+        "sluice": {
+          "name": "Three reed sluice",
+          "description": "A heavy wheel diverts the buried spring. Dry channels lead north to a shrine. The reed carving at the well records the proper wheel direction.",
+          "exits": {
+            "west": "cistern",
+            "north": "sanctuary"
+          },
+          "items": [],
+          "features": {
+            "wheel": "TURN WHEEL followed by the direction recorded beside the well. Restore water before entering the shrine."
+          },
+          "image": "room-art/room14.png",
+          "requires": {
+            "north": "water-flowing"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "water-flowing"
+              ],
+              "description": "The wheel is set toward sunrise. Clear water runs through channels to the northern shrine. The cistern is west.",
+              "features": {
+                "wheel": "The wheel is set east. Water now flows to the shrine."
+              }
+            }
+          ]
+        },
+        "sanctuary": {
+          "name": "Shrine of rain",
+          "description": "Water murmurs through a stone bowl. An eastern door bears the words BLESS WATER. A keeper carved the blessing ritual on its rim.",
+          "exits": {
+            "south": "sluice",
+            "east": "terrace"
+          },
+          "items": [],
+          "features": {
+            "bowl": "The rim records: BLESS WATER after restoring the flow. The rite needs no object. The water seal is kept on the eastern terrace until an explorer takes it; bring it to the farthest realm."
+          },
+          "image": "room-art/room15.png",
+          "requires": {
+            "east": "water-blessed"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "water-blessed"
+              ],
+              "description": "The blessed bowl gleams. The eastern door stands open onto the living spring terrace. The sluice is south.",
+              "features": {
+                "bowl": "The blessing is complete. The door onto the spring terrace remains open."
+              }
+            }
+          ]
+        },
+        "terrace": {
+          "name": "Living spring terrace",
+          "description": "Water bubbles above the restored spring. A carved shelf is set into the stone. The shrine lies west.",
+          "exits": {
+            "west": "sanctuary"
+          },
+          "items": [
+            "water seal"
+          ],
+          "features": {
+            "seal": "A seal is a promise to share water, not a weapon. Keep this object for the dawn. You may leave used tools behind and collect them again later."
+          },
+          "image": "room-art/room19.png",
+          "descriptionStates": [
+            {
+              "presentItems": [
+                "water seal"
+              ],
+              "description": "Water bubbles above the restored spring. The water seal rests on its carved shelf. The shrine lies west."
+            },
+            {
+              "absentItems": [
+                "water seal"
+              ],
+              "description": "Water bubbles above the restored spring. The carved shelf is empty of its water seal. The shrine lies west."
+            }
+          ]
         }
       },
       "puzzles": [
@@ -57,13 +217,61 @@
           "flag": "portal-open",
           "response": "The arch fills with starlight. A portal opens east.",
           "hints": [
-            "Find the key by the well.",
-            "Carry the bronze key to the arch.",
-            "TURN KEY at the arch."
+            "Find the bronze key by the well.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "TURN KEY."
+          ]
+        },
+        {
+          "room": "cistern",
+          "command": "fit crank",
+          "needs": [
+            "brass crank"
+          ],
+          "requires": [],
+          "flag": "crank-fitted",
+          "response": "The crank seats firmly. The eastern grate rises.",
+          "hints": [
+            "The workshop holds the missing handle.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "FIT CRANK."
+          ]
+        },
+        {
+          "room": "sluice",
+          "command": "turn wheel east",
+          "needs": [],
+          "requires": [
+            "crank-fitted"
+          ],
+          "flag": "water-flowing",
+          "response": "Clear water rushes north. The shrine passage opens.",
+          "hints": [
+            "EXAMINE REEDS at the well for the wheel direction.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "TURN WHEEL EAST."
+          ]
+        },
+        {
+          "room": "sanctuary",
+          "command": "bless water",
+          "needs": [],
+          "requires": [
+            "water-flowing"
+          ],
+          "flag": "water-blessed",
+          "response": "The bowl shines. The eastern door opens onto the living spring.",
+          "hints": [
+            "EXAMINE BOWL. The rite needs no tool.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "BLESS WATER."
           ]
         }
       ],
-      "winFlags": []
+      "winFlags": [
+        "portal-open",
+        "water-blessed"
+      ]
     }
   ],
   "portals": []

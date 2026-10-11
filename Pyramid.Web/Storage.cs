@@ -4,7 +4,7 @@ using Pyramid.Web.Game;
 
 namespace Pyramid.Web;
 
-public record Account(string Id,string Name,string Hash,int Failures,DateTimeOffset? LockedUntil,string? Email=null,bool EmailVerified=false,bool IsAdmin=false,bool Suspended=false,string? PendingEmail=null,bool EmailNotifications=true);
+public record Account(string Id,string Name,string Hash,int Failures,DateTimeOffset? LockedUntil,string? Email=null,bool EmailVerified=false,bool IsAdmin=false,bool Suspended=false,string? PendingEmail=null,bool EmailNotifications=true,bool IsGod=false);
 public partial class Storage
 {
     private readonly string connectionString;

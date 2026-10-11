@@ -26,6 +26,7 @@ ContentPacks.Load(contentDir);
 var keys=builder.Services.AddDataProtection().SetApplicationName("DigitalRCS.Pyramid.v1").PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(dataDir,"keys")));
 if(OperatingSystem.IsWindows()&&!builder.Environment.IsDevelopment())keys.ProtectKeysWithDpapi(protectToLocalMachine:true);
 builder.Services.AddSingleton(new Storage(dataDir));
+builder.Services.AddSingleton<SiteSettings>();
 builder.Services.AddSingleton<MailDelivery>();
 builder.Services.AddHostedService(sp=>sp.GetRequiredService<MailDelivery>());
 builder.Services.Configure<PasswordHasherOptions>(o=>o.IterationCount=310000);
@@ -67,6 +68,14 @@ app.Use(async(c,next)=>{
     if(c.Request.Path.StartsWithSegments("/api"))c.Response.Headers.CacheControl="no-store";
     await next();
 });
+app.Use(async(c,next)=>{
+    if(!c.Request.Path.StartsWithSegments("/api")){await next();return;}
+    bool importing=c.Request.Method=="POST"&&c.Request.Path=="/api/admin/backup/import";
+    using var lease=await MaintenanceGate.Enter(importing,c.RequestAborted);
+    if(importing){var limit=c.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature>();if(limit is {IsReadOnly:false})limit.MaxRequestBodySize=BackupEndpoints.UploadLimit;}
+    else if(c.Request.Method=="POST"&&c.Request.Path=="/api/admin/settings"){var limit=c.Features.Get<Microsoft.AspNetCore.Http.Features.IHttpMaxRequestBodySizeFeature>();if(limit is {IsReadOnly:false})limit.MaxRequestBodySize=8192;}
+    await next();
+});
 app.UseAuthentication();app.UseAuthorization();app.UseRateLimiter();
 app.Use(async(c,next)=>{
     if(c.Request.Method=="POST"&&c.Request.Path.StartsWithSegments("/api"))
@@ -79,7 +88,17 @@ app.Use(async(c,next)=>{
 // Serve only bundled assets. index.html always receives a server-derived subfolder base.
 app.UseStaticFiles(new StaticFileOptions{OnPrepareResponse=c=>{if(c.Context.Request.Path=="/index.html")c.Context.Response.Headers.CacheControl="no-store";}});
 app.MapAccounts();
+app.MapSettings();
+app.MapRoles();
+app.MapBackups();
 var api=app.MapGroup("/api").RequireAuthorization().RequireRateLimiting("play");
+api.AddEndpointFilter(async(context,next)=>{
+    // Administrators retain access to the separate administration endpoints, but playing
+    // requires a verified address for every account. Recovery and account routes are separate.
+    if(context.HttpContext.Request.Path=="/api/logout")return await next(context);
+    var account=context.HttpContext.RequestServices.GetRequiredService<Storage>().FindById(context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    return account?.EmailVerified==true?await next(context):Results.Json(new{code="verification_required",error="Verify your email before starting or resuming an adventure."},statusCode:403);
+});
 api.MapPost("/logout",async(HttpContext c,Storage db)=>{db.Sleep(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!);db.EndSession(c.User.FindFirstValue("sid")!);await c.SignOutAsync("Pyramid");return Results.Ok();});
 api.MapGet("/play",(HttpContext c,Storage db)=>{try{return Results.Ok(db.PlayView(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!));}catch(InvalidOperationException e){return Results.Json(new{error=e.Message},statusCode:409);}});
 api.MapGet("/expeditions",(HttpContext c,Storage db)=>Results.Ok(db.Lobby(c.User.FindFirstValue(ClaimTypes.NameIdentifier)!)));
@@ -110,14 +129,28 @@ api.MapPost("/command",(CommandInput input,HttpContext c,Storage db)=>{
     return result.accepted?Results.Ok(Engine.View(result.state)):Results.Json(new{error="Another tab changed this expedition. Your view has been refreshed; retry your command.",state=Engine.View(result.state)},statusCode:409);
 });
 app.MapGet("/health",()=>Results.Ok(new{status="ok"}));
-app.MapGet("/",async(HttpContext c)=>{
-    if(c.Request.PathBase.HasValue&&!c.Request.Path.Value!.EndsWith('/')){c.Response.Redirect(c.Request.PathBase+"/");return;}
+async Task ServeClient(HttpContext c){
+    if(c.Request.Path==""&&c.Request.PathBase.HasValue){c.Response.Redirect(c.Request.PathBase+"/");return;}
     c.Response.Headers.CacheControl="no-store";
     var html=await File.ReadAllTextAsync(Path.Combine(app.Environment.WebRootPath,"index.html"));
     c.Response.ContentType="text/html; charset=utf-8";
     await c.Response.WriteAsync(html.Replace("__APP_BASE__",HtmlEncoder.Default.Encode(c.Request.PathBase+"/")));
-});
+}
+app.MapGet("/",ServeClient);
+app.MapGet("/admin",ServeClient);
+// Operator preflight applies additive schema changes and validates configuration
+// without opening a listener or starting the mail worker.
+if(builder.Configuration.GetValue("Pyramid:ValidateOnly",false))
+{
+    _=app.Services.GetRequiredService<Storage>();
+    _=app.Services.GetRequiredService<SiteSettings>();
+    _=app.Services.GetRequiredService<MailDelivery>();
+    Console.WriteLine("Database schema and configuration validated; background services were not started.");
+    return;
+}
 // Explicit local operator bootstrap; never promote the first public registrant.
+var bootstrapGod=builder.Configuration["Pyramid:BootstrapGod"];
+if(!string.IsNullOrWhiteSpace(bootstrapGod)){app.Services.GetRequiredService<Storage>().BootstrapGod(bootstrapGod);if(builder.Configuration.GetValue("Pyramid:BootstrapOnly",false))return;}
 var bootstrapName=builder.Configuration["Pyramid:BootstrapAdmin"];
 if(!string.IsNullOrWhiteSpace(bootstrapName))
 {

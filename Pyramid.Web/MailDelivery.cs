@@ -14,40 +14,25 @@ public sealed class MailDelivery : BackgroundService
     private readonly Storage storage;
     private readonly IDataProtector protector;
     private readonly ILogger<MailDelivery> logger;
-    private readonly string host,username,password,from,senderName,captureDirectory;
-    private readonly int port;
-    private readonly Uri? publicBase;
-    public string Mode {get;}
+    private readonly string captureDirectory;
+    private readonly SiteSettings settings;
+    public string Mode=>settings.Mail.Mode;
     public bool Enabled=>Mode!="Disabled";
 
-    public MailDelivery(Storage storage,IConfiguration configuration,IWebHostEnvironment environment,IDataProtectionProvider protection,ILogger<MailDelivery> logger)
+    public MailDelivery(Storage storage,IConfiguration configuration,IWebHostEnvironment environment,IDataProtectionProvider protection,ILogger<MailDelivery> logger,SiteSettings? settings=null)
     {
         this.storage=storage;this.logger=logger;protector=protection.CreateProtector("Pyramid.MailOutbox.v1");
-        var config=configuration.GetSection("Pyramid:Mail");
-        Mode=(config["Mode"]??"Disabled").Trim().ToLowerInvariant() switch{"disabled"=>"Disabled","capture"=>"Capture","smtp"=>"Smtp",_=>throw new InvalidOperationException("Unknown mail mode.")};
-        if(Mode=="Capture"&&!environment.IsDevelopment())throw new InvalidOperationException("Mail capture is allowed only in Development.");
-        host=config["Host"]??"smtp.gmail.com";port=config.GetValue("Port",465);
-        username=config["Username"]??"";password=config["Password"]??"";
-        from=config["FromAddress"]??username;senderName=config["SenderName"]??"Pyramid";
+        this.settings=settings??new SiteSettings(storage,configuration,environment,protection);
         captureDirectory=Path.Combine(Path.GetFullPath(configuration["Pyramid:DataDirectory"]??"App_Data",environment.ContentRootPath),"MailCapture");
         var webRoot=Path.GetFullPath(environment.WebRootPath??Path.Combine(environment.ContentRootPath,"wwwroot"));
         if(captureDirectory.Equals(webRoot,StringComparison.OrdinalIgnoreCase)||captureDirectory.StartsWith(webRoot+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Mail capture must remain outside the public web root.");
-        var baseSetting=configuration["Pyramid:PublicBaseUrl"];
-        if(!string.IsNullOrWhiteSpace(baseSetting))
-        {
-            if(!Uri.TryCreate(baseSetting,UriKind.Absolute,out publicBase)||!string.IsNullOrEmpty(publicBase.UserInfo)||!string.IsNullOrEmpty(publicBase.Query)||!string.IsNullOrEmpty(publicBase.Fragment)||
-               !(publicBase.Scheme=="https"||(environment.IsDevelopment()&&publicBase.Scheme=="http"&&publicBase.IsLoopback)))
-                throw new InvalidOperationException("PublicBaseUrl must be a trusted HTTPS application URL (HTTP loopback is allowed in Development).");
-        }
-        if(Enabled&&publicBase==null)throw new InvalidOperationException("Email requires Pyramid:PublicBaseUrl.");
-        if(Mode=="Smtp"&&(string.IsNullOrWhiteSpace(host)||string.IsNullOrWhiteSpace(username)||string.IsNullOrWhiteSpace(password)||port is not (465 or 587)))throw new InvalidOperationException("SMTP requires host, credentials, and TLS port 465 or 587.");
-        if(Enabled&&!MailboxAddress.TryParse(from,out _))throw new InvalidOperationException("Email requires a valid FromAddress.");
         if(Mode=="Capture")Directory.CreateDirectory(captureDirectory);
         storage.EnsureMailStorage();
     }
     public string BuildLink(string kind,string value)
     {
         if(kind is not ("reset" or "verify" or "expedition"))throw new ArgumentException("Unknown email link type.",nameof(kind));
+        var publicBase=settings.Mail.PublicBase;
         if(publicBase==null)throw new InvalidOperationException("PublicBaseUrl is not configured.");
         return publicBase.AbsoluteUri.TrimEnd('/')+"/#"+kind+"="+Uri.EscapeDataString(value);
     }
@@ -64,20 +49,22 @@ public sealed class MailDelivery : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if(!Enabled)return;
         while(!stoppingToken.IsCancellationRequested)
         {
             try
             {
+                using var lease=await MaintenanceGate.Enter(false,stoppingToken);
+                var config=settings.Mail;
+                if(config.Mode=="Disabled"){await Task.Delay(TimeSpan.FromSeconds(3),stoppingToken);continue;}
                 var mail=storage.ClaimMail();
                 if(mail==null){await Task.Delay(TimeSpan.FromSeconds(3),stoppingToken);continue;}
                 try
                 {
                     var data=JsonSerializer.Deserialize<Envelope>(protector.Unprotect(mail.Payload))??throw new InvalidOperationException("Invalid envelope.");
                     if(!storage.MailRecipientCurrent(mail.UserId,data.To,data.AllowPendingEmail,data.RequireNotifications)){storage.FinishMail(mail.Id,"cancelled");continue;}
-                    var message=new MimeMessage();message.From.Add(new MailboxAddress(senderName,from));message.To.Add(MailboxAddress.Parse(data.To));message.Subject=data.Subject;
+                    var message=new MimeMessage();message.From.Add(new MailboxAddress(config.SenderName,config.FromAddress));message.To.Add(MailboxAddress.Parse(data.To));message.Subject=data.Subject;
                     message.MessageId=mail.Id+"@pyramid.local";message.Body=new TextPart("plain"){Text=data.Body};
-                    if(Mode=="Capture")
+                    if(config.Mode=="Capture")
                     {
                         // Deliberately plaintext only in a private development directory for integration tests.
                         await message.WriteToAsync(Path.Combine(captureDirectory,mail.Id+".eml"),stoppingToken);
@@ -86,12 +73,12 @@ public sealed class MailDelivery : BackgroundService
                     {
                         using var timeout=CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);timeout.CancelAfter(TimeSpan.FromSeconds(60));
                         using var smtp=new SmtpClient(){Timeout=30000};
-                        await smtp.ConnectAsync(host,port,port==465?SecureSocketOptions.SslOnConnect:SecureSocketOptions.StartTls,timeout.Token);
-                        await smtp.AuthenticateAsync(username,password,timeout.Token);
+                        await smtp.ConnectAsync(config.Host,config.Port,config.Port==465?SecureSocketOptions.SslOnConnect:SecureSocketOptions.StartTls,timeout.Token);
+                        await smtp.AuthenticateAsync(config.Username,config.Password,timeout.Token);
                         if(!storage.MailRecipientCurrent(mail.UserId,data.To,data.AllowPendingEmail,data.RequireNotifications)){storage.FinishMail(mail.Id,"cancelled");await smtp.DisconnectAsync(true,timeout.Token);continue;}
                         await smtp.SendAsync(message,timeout.Token);await smtp.DisconnectAsync(true,timeout.Token);
                     }
-                    storage.FinishMail(mail.Id,Mode=="Capture"?"captured":"sent");
+                    storage.FinishMail(mail.Id,config.Mode=="Capture"?"captured":"sent");
                 }
                 catch(OperationCanceledException) when(stoppingToken.IsCancellationRequested){break;}
                 catch(Exception error)

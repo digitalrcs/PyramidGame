@@ -1,28 +1,125 @@
-DIGITALRCS PYRAMID - PLAYER, API AND MOD GUIDE
-===========================================
+DIGITALRCS PYRAMID — PLAYER, API AND MOD GUIDE
+Version 1.4.1
 
-WELCOME
-This is an expanded text adventure inspired by the home-computer era.
-The original Python game is separate and unchanged. Chamber of the Gods
-contains six levels, eighteen relics and a final logic puzzle. Graphics
-are atmospheric gold pixel reliefs; the written descriptions govern play.
-There is no clock or guaranteed completion time. Every command is saved.
+This guide combines the reviewed documentation in the public repository.
+Online guides: https://github.com/digitalrcs/PyramidGame/wiki
+Developer walkthroughs contain spoilers and are kept in the repository separately.
 
-SOLO PLAY
-Create an explorer account, or sign in to resume. Your original solo save
-remains separate from all shared expeditions. Other signed-in explorers
-can see your location, score and achievements, not your satchel or notes.
-GET LAMP, LIGHT LAMP and GET BOTTLE are useful first commands.
-N/S/E/W or GO EAST moves. LOOK repeats the room; GET <object> and DROP
-<object> move items. EXAMINE <thing>, READ TABLET, INVENTORY, MAP, JOURNAL,
-NOTE <text>, SCORE, SAVE and HELP are available. RETREAT returns to the
-current landing. Satchels hold eight objects. HINT costs five points.
-Collect three relics per level and DEPOSIT at the landing. Read the tablet
-in the study; solve the gate riddle with SAY <answer>, then ASCEND.
-At the final throne, use your five journal clues: SET <god> <1-5>, INVOKE.
-The order differs between expeditions. No puzzle answers are in this guide.
 
-EXPLORING TOGETHER
+========================================================================
+
+# Player guide
+
+Read the room, try a short command, and keep notes. The six-level campaign has sixty rooms, eighteen relics and a final puzzle whose names change between expeditions. There is no real-time deadline; the lamp does not run out.
+
+## First steps
+
+Create an account with an explorer name and email. Follow the verification link and confirm it before starting your expedition; an administrator can also approve your address. Until then, signing in opens the verification screen. Use RESEND VERIFICATION or CHECK VERIFICATION; the screen also checks automatically while open. Contact an administrator if the registered address needs correcting. For the original Chamber of the Gods adventure, begin with:
+
+```text
+GET LAMP
+LIGHT LAMP
+GET BOTTLE
+NORTH
+LOOK
+```
+
+Each command is saved. Return using the same account to continue. The explorer sidebar shares room, level, score and achievements; your personal inventory, notes and transcript stay private.
+
+## Commands
+
+The original Pyramid adventure accepts common alternatives: `FEED BIRD` for `FEED IBIS`, `CLEAN MIRROR` for `POLISH MIRROR`, and `LAY BOARD` for `LAY PLANK`. Item aliases include lantern (lamp), birdseed (grain), board (cedar plank), and gear (brass cog). They work with GET, TAKE, DROP, and EXAMINE. Requirements and rewards stay the same; ambiguous names ask for clarification. Custom adventures retain their authored vocabulary.
+
+| Command | Use |
+| --- | --- |
+| `N`, `S`, `E`, `W` or `GO EAST` | Move through an exit |
+| `LOOK` / `L` | Repeat the room description |
+| `GET <item>`, `DROP <item>` | Pick up or set down an object |
+| `EXAMINE <thing>` | Inspect an object or feature |
+| `INVENTORY` / `I` | Check your eight-slot satchel |
+| `LIGHT LAMP`, `OFF LAMP` | Control your lamp |
+| `READ <item>` / `READ TABLET` | Read writing and copy supported clues into your journal |
+| `JOURNAL`, `NOTE <text>` | Review clues or record an observation |
+| `DEPOSIT` | Bank relics at the current landing |
+| `SAY <answer>`, `ASCEND` | Answer a gate riddle and move to the next level |
+| `MAP` | Buy a map of rooms you have personally visited; costs 2 points |
+| `HINT` | Request progressively clearer local help; costs 5 points |
+| `CLEAR` | Clear your saved transcript without clearing progress or notes |
+| `RETREAT` | Follow your safety cord to the current landing |
+| `SCORE`, `HELP`, `SAVE` | Check progress, commands or automatic saving |
+| `CHIMES ON`, `CHIMES OFF` | Enable or mute this browser's game sounds |
+
+Room descriptions introduce other verbs, including FILL, POUR, FEED, TIE, TURN and REFLECT. Use full names when an abbreviated noun is ambiguous. The up/down arrows recall recent commands. On a phone, tabs switch between the terminal and side panels.
+
+## The ascent
+
+| Level | Theme |
+| --- | --- |
+| I — The Buried Gate | Water, a guardian bird and a broken crossing |
+| II — The Drowned Archive | Machinery and balance |
+| III — The Observatory | Stars and ancient light |
+| IV — The Halls of Echoes | Instruments and resonance |
+| V — The Hall of Judgment | Balance, reflection and a hidden name |
+| VI — Chamber of the Gods | Final offerings and the five-clue logic puzzle |
+
+Collect and deposit three relics on each level. Read the study tablet, answer the gate's riddle, then ascend. Your lamp and journal continue with you; level tools stay behind. At the final throne, use the journal clues to place the gods with `SET <GOD> <1-5>`, then `INVOKE` when ready.
+
+## Maps, sounds and points
+
+Maps contain only your visited rooms in the current realm, with known connections between them. Each opening buys a snapshot; it does not reveal another explorer's discoveries. Use **Show floor** for visited rooms above or below you and **MY FLOOR** to return to your current floor. Floors are relative within each mapped area. Route labels identify stairs, ladders, holes, bridges and portals where authored; arrows show allowed travel. Some passages bend, so follow route labels when the schematic cannot preserve every direction. Changing floors or switching map views costs no additional points.
+
+Room-entry chimes flag visible items, unfinished puzzles or authored features. They invite investigation rather than promising an immediately usable object. Different sounds mark an arriving companion, a visible room change, points earned, a solved puzzle and victory. When several happen together, one sound plays: victory takes priority, then a puzzle, points, arrival and room activity. A short text notice also describes the event. Use CHIMES OFF to mute them all, or CHIMES ON to restore them; the preference belongs to this browser. Sound begins after interacting with the page if the browser requires it.
+
+LOOK and EXAMINE reflect supported room changes. Collected objects disappear from the live object list, and a solved mechanism can describe its new state. Old transcript entries remain a record of what was seen earlier; LOOK gives the current scene.
+
+| Activity | Points |
+| --- | ---: |
+| Deposit a relic | 20 |
+| Solve a mechanism or gate riddle | 25 |
+| Ascend | 100 |
+| Complete the final invocation | 500 |
+| Discover a non-starting room | 1 |
+| Survey every room in a realm | 10 |
+| Give an accepted non-lamp item | 5 |
+| First journal share that adds information | 3 |
+
+Item-giving rewards are limited to three distinct items per realm per giver. The journal reward is once per expedition. Repeated visits, unchanged notes and chat do not generate points. Map and hint costs still accrue when the displayed score is zero and offset later earnings.
+
+Continue with [shared expeditions](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Multiplayer.md), or see the [developer walkthrough](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Developer-Walkthrough.md) if you want full solutions.
+
+## Mobile play
+
+On Android and other small screens, the game keeps the same commands and saved adventures while moving the sidebars into touch-friendly panels:
+
+- **Play** returns to the room transcript and command field.
+- **Map** buys the current map snapshot for two points.
+- **Satchel & journal** shows inventory, objectives and notes.
+- **Explorers** shows other players and their progress.
+- **Parties** opens expedition selection, invitations and join requests.
+
+Use **Menu** for your account, help, administration (if permitted) and sign-out. On a phone, maps open as room-and-route cards, with your current room first. Switch to **Drawing** for the gold schematic and swipe to inspect it. Switching between cards and drawing is free; closing and reopening the map costs another two points. Neither view reveals unvisited rooms.
+
+## Choose an adventure
+
+After signing in, the adventure library opens. **Your journeys** lists the original Pyramid save and your saved expeditions. Choose **RESUME**, or select **NEW EXPEDITION** on an illustrated adventure card, name your journey, and choose **BEGIN ADVENTURE**. Leave invitations empty to play alone; companions can join later.
+
+The Oasis of Stars is a separate journey through a forgotten oasis, a silent moon realm and the gates of dawn. Restore ancient mechanisms, carry clues between realms and find the way home. It uses the same commands, maps, journal and sharing system.
+
+Every expedition has its own save. Use the saved-world selector to resume it, or **RETURN TO ORIGINAL SOLO SAVE** to return to your original Pyramid journey. Starting another adventure does not reset an existing one.
+
+## Reading scrolls and other writing
+
+Use READ followed by a readable item's name, such as READ ANCIENT SCROLL. You must carry it or be able to see it in the current room, and you need light. EXAMINE suggests READ when an item has authored writing. Full names work best; a unique shortened name is accepted, while ambiguous names ask you to choose.
+
+The writing is copied into your personal JOURNAL once. Re-reading shows it again without duplicate entries or extra points. Your journal holds 100 entries; when full, reading still shows the text and explains that it was not copied. Fixed scenery may also respond to READ without becoming a journal entry. In Chamber of the Gods, `READ STAR CHART` records the Orion clue and `READ LAPIS TABLET` records the writing on the collectible tablet from the Drowned Archive. You must carry the relic or see it in the current room. In a study room, `READ TABLET` deliberately reads that room's fixed study inscription, even if you carry the lapis tablet. Use the full `READ LAPIS TABLET` command to distinguish the collectible. Outside a study, a unique shortened item name such as `READ TABLET` may resolve to the collectible.
+
+In The Oasis of Stars, `READ STAR CHART` records the Moon Realm chart's own clue. The same item name can have different writing in different adventures. Scenic inscriptions and item writing are separate: `EXAMINE MEMORY` in the Moon archive reads its fixed clue, while `READ STAR CHART` reads the portable object.
+
+
+========================================================================
+
+# Shared expeditions
+
 Open EXPEDITIONS and create a named world. Choose Chamber of the Gods or
 an installed content pack. A private world is invitation-only. Opening
 join requests makes it visible to other signed-in explorers, but the host
@@ -37,11 +134,13 @@ One person can go east while another goes west. Players in the same room
 see arrivals and LOOK reports companions. The companion list updates every
 five seconds while the browser tab is visible; it is not instant chat.
 
-  SHARE ITEM bronze key WITH Mrs_Player
-  GET bronze key FROM Wayfarer
-  OFFERS
-  SHARE INFORMATION The inscription mentions the rising sun.
-  SHARE JOURNAL WITH Mrs_Player
+```text
+SHARE ITEM bronze key WITH ExplorerTwo
+GET bronze key FROM ExplorerOne
+OFFERS
+SHARE INFORMATION The inscription mentions the rising sun.
+SHARE JOURNAL WITH ExplorerTwo
+```
 
 Use full item and explorer names. An item stays in its owner's satchel
 until accepted, and both players must be awake in the same room. You cannot
@@ -55,7 +154,7 @@ Closing the tab leaves your explorer in a trance after 45 seconds;
 signing out or switching worlds does so immediately. Location and satchel
 persist. Resume that expedition to wake in the saved room. Important tools
 held by a sleeping player remain theirs: offer or drop shared tools before
-leaving for a long time. There is no forced inventory theft or kick command.
+leaving for a long time. Players cannot take an unoffered item. Account administrators can end sessions or suspend access.
 In Chamber of the Gods, awake players gather at the gate to ASCEND;
 sleeping companions travel to the next landing with the group. This is the
 one intentional exception to resuming at the exact room where you left.
@@ -65,7 +164,76 @@ If two actions compete, one is rejected with a refreshed state. Review the
 new situation and retry; commands are never silently replayed. EXPEDITIONS
 lets you return to your original solo save or resume another shared world.
 
-JSON MODS: DATA, NOT EXECUTABLE PLUGINS
+## Starting without your companions
+
+Use the expedition dropdown to select a saved, invited or open world. When creating an expedition, choose an online explorer or type the name of an existing offline account. Inviting someone is optional: the host can begin immediately, and a companion can accept later. An invitation does not create an account.
+
+Your solo save remains available through the expedition selector. See the [player guide](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Player-Guide.md) for commands and rewards and [accounts and email](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Accounts-and-Email.md) for notification behavior.
+
+## Shared changes and private discoveries
+
+A companion can open a route or pick up an object while you remain in the room. The live object list and authored conditional descriptions use the shared world state; LOOK gives the latest scene. Arrivals and visible changes can produce a short notice and sound. Repeated refreshes do not keep replaying an unchanged event. CHIMES OFF mutes all game cues in your browser without affecting anyone else.
+
+Maps and journals remain personal. A companion exploring upstairs does not reveal those rooms on your map. Reading a portable item adds its writing only to your journal; use SHARE JOURNAL when you want to pass the clues on. Objects held by another explorer are not readable from your own inventory or room view. Offer and accept the object, or share the information in person.
+
+
+========================================================================
+
+# Adventure designer
+
+Open **Adventure designer** from the adventure library. It creates complete schema-version-1 content packs for the existing game engine. No programming is required for rooms, clues, puzzle commands, locks or portals.
+
+The designer saves its **draft, including unfinished edits, in this browser on this device**. It is not an account backup and does not synchronize across browsers or devices. Validation issues remain visible when you return; resolve them before exporting a playable pack. Export JSON regularly, especially before clearing browser data. Private browsing may not preserve drafts.
+
+## Build an adventure
+
+1. Begin with the playable **Silent Sanctuary** starter. Give the adventure a title and unique lowercase ID such as `sunken-temple`.
+2. Name the realm and its objective. Add rooms using stable IDs. Write descriptions that help explorers understand what they can try.
+3. Connect rooms with directional exits. Add reverse exits separately if players should be able to return. The starting room must be lit.
+4. Add loose items that can be collected. Feature clues respond to `EXAMINE <feature name>`.
+5. In **Puzzles**, choose the room, exact command, success response and completion flag. Commands must not replace built-in commands such as `GET`, `GO`, `LOOK`, `HINT` or `MAP`.
+6. Required items must exist in the adventure (or be the starting lamp or bottle). They must be in the player's satchel to solve the puzzle; they are not consumed. Prerequisite flags refer to other puzzles in the same realm.
+7. Select completion flags and use flags to lock room exits or portals. All checked completion flags are required. Flags do not automatically create an exit.
+8. Add other realms and connect them under **Portals**. A portal's unlock flag belongs to its source realm. Add a separate return portal where needed.
+9. Export the validated JSON and playtest it on a development installation before publishing.
+
+Give every puzzle fair clues and progressively clearer hints. Allow players to retrieve tools they may have dropped. Avoid locking the only route to an item behind a puzzle that requires that item. Validation checks schema and references; it cannot prove that your story is solvable or that every room is reachable.
+
+## Rooms that change
+
+Keep permanent scenery in the base room description. The game lists loose items from the saved state, so picking up or dropping an object changes the `You see` list automatically.
+
+Under **Changing room descriptions**, add a state with completed or incomplete puzzle flags, items present, or items absent. Every condition must match. The last matching rule replaces the base room text. Item conditions check loose objects in this room, not any explorer's satchel; use **Move up/down** to set priority. For example, require `basin-filled` and describe flowing water instead of a dry basin. Optional EXAMINE overrides keep feature clues consistent with the new scene. Each matching rule overrides only its named features; other feature clues stay available. An unconditional rule always matches, so put it before more specific rules.
+
+Open **Preview room changes**, select completed puzzles, and enter the items currently on the floor. The preview shows the resulting description, loose items, and EXAMINE text without changing a saved game. Export/import retains these rules. Undefined flags and contradictory conditions block export.
+
+Use **up/down** exits for vertical travel. Choose passage, stairs, ladder, hole, or bridge for the route type. A hole may have only a down exit; add a return exit only if the story allows one. Maps show relative floors and directions for visited rooms. Portals are distinct connections rather than ordinary corridors.
+
+The **Readables** tab assigns text to items already placed in rooms. `READ <item>` displays it and copies it to the journal once. The player must carry it or see it in their current room and have light. Keep portable item names distinct from fixed features to avoid unclear READ commands. Leave the field blank for items without readable text.
+
+Sounds are automatic: visible room changes, arriving companions, points, solved puzzles, and victory have distinct cues. A single action plays one prioritized cue, and players can mute all sounds. These content rules do not create moving characters or a mummy AI.
+
+## Import, advanced JSON and artwork
+
+Import accepts a complete adventure JSON file up to 1 MB. Importing or applying JSON asks before replacing the current draft. The JSON tab also supports deliberate changes that do not have dedicated controls, such as removing a room or changing an ID. Update its references at the same time.
+
+Choose one of the 60 bundled gold illustrations in a room. Custom artwork must use `mod-art/<adventure-id>/<image-name>.png`; an administrator must install the actual PNG separately. JSON files never embed images, executable scripts or HTML. The designer does not upload content to the server.
+
+The guided designer works with complete adventures. Existing `extends` add-on files should be maintained with the [Mod Guide](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Modding.md), rather than imported independently. To edit a split adventure in the designer, first combine its levels, portals and readableItems into one complete pack and validate it in a development installation.
+
+## Installation and review
+
+An administrator reviews the exported file, installs it in the server's `ContentPacks` directory, adds any custom PNGs to the corresponding `wwwroot/mod-art/<adventure-id>` directory, and restarts the application using the deployment procedure. Validate and playtest in development before touching production; an invalid pack can prevent startup. Keep adventure, realm and room identifiers stable after publication so saved expeditions remain usable. Back up the current content and player database before changing an installed adventure.
+
+This release provides content authoring and JSON export. It does not provide public publishing, cloud draft storage, script execution or an in-editor playtest engine.
+
+
+
+
+========================================================================
+
+# Content packs and portals
+
 The server administrator installs reviewed JSON files in ContentPacks,
 outside wwwroot, and restarts the app. Players cannot upload server code or
 install packs through the web UI. JSON can define rooms, directions, loose
@@ -74,25 +242,41 @@ run scripts, access files, SQL, network services or change authentication.
 Anyone with the source can create and distribute packs for admin review.
 
 Included working examples (in the source and server publish package):
-  ContentPacks/oasis-of-stars.json     - standalone adventure
-  ContentPacks/oasis-moon-addon.json   - adds a realm and two-way portal
+
+```text
+ContentPacks/oasis-of-stars.json     - standalone adventure
+ContentPacks/oasis-moon-addon.json   - adds the Moon and Dawn realms and return portals
+```
 
 Root fields:
-  schemaVersion: 1
-  id: unique lowercase identifier, letters/digits/dashes (starts a letter)
-  name: display name, up to 100 characters
-  startLevel: stable positive level number (default 1)
-  extends: optional base pack ID; used only by addon files
-  levels: array of realm definitions
-  portals: array of directional realm connections
+
+```text
+schemaVersion: 1
+id: unique lowercase identifier, letters/digits/dashes (starts a letter)
+name: display name, up to 100 characters
+startLevel: stable positive level number (default 1)
+extends: optional base pack ID; used only by addon files
+levels: array of realm definitions
+readableItems: optional item-name-to-text dictionary
+portals: array of directional realm connections
+```
 
 Level fields:
-  number, name, objective, start (room ID), rooms (object keyed by room ID),
-  puzzles (array), winFlags (array of puzzle flags marking realm completion).
+
+```text
+number, name, objective, start (room ID), rooms (object keyed by room ID),
+puzzles (array), winFlags (array of puzzle flags marking realm completion).
+```
+
 Room fields:
-  name, description, lit (default true), exits ({"west":"room-id"}),
-  requires ({"west":"flag"}), items (["bronze key"]),
-  features ({"inscription":"Descriptive text"}), image (optional).
+
+```text
+name, description, lit (default true), exits ({"west":"room-id"}),
+requires ({"west":"flag"}), items (["bronze key"]),
+features ({"inscription":"Descriptive text"}), image (optional),
+descriptionStates (optional ordered rules), exitKinds (optional route labels).
+```
+
 Image may reference room-art/room1.png through room-art/room60.png, or
 mod-art/<base-pack-id>/<scene-name>.png. Custom scene names use lowercase
 letters, digits and dashes, beginning with a letter. For source builds place
@@ -103,8 +287,12 @@ arbitrary file reads are rejected. PNGs are optional; missing art does not
 prevent play. Artwork should not reveal puzzle solutions or private notes.
 
 Puzzle fields (names are case insensitive in JSON):
-  room, command, needs (carried items), requires (earlier local flags),
-  flag (unique result), response, hints (one to five strings).
+
+```text
+room, command, needs (carried items), requires (earlier local flags),
+flag (unique result), response, hints (one to five strings).
+```
+
 Commands and item names are lowercase; commands have single spaces and
 must not shadow built-in commands. Example command: "turn key".
 Successful puzzles set a flag once; they do not consume items. Requirement
@@ -112,8 +300,12 @@ flags are local to that realm. Room exits and portal gates use those flags.
 Completion grants an achievement and permits continued exploration.
 
 Portal fields:
-  fromLevel, fromRoom, direction, toLevel, toRoom, requires (optional flag),
-  description. Directions: north, south, east, west, up, down.
+
+```text
+fromLevel, fromRoom, direction, toLevel, toRoom, requires (optional flag),
+description. Directions: north, south, east, west, up, down.
+```
+
 Create a reverse portal explicitly if players should return. A portal
 cannot replace an existing exit in the same direction. The example addon
 does not modify the original oasis file; it supplies new levels and portal
@@ -133,10 +325,76 @@ offline players. Back up database, keys and exact content versions together.
 Limits: 1 MiB per file, 100 realms/pack, 100 rooms/realm, 100 puzzles/realm,
 200 portals/pack. Startup rejects an invalid pack with a diagnostic.
 
-HTTP API (v1, JSON; all paths relative to the application subfolder)
+## Authoring workflow
+
+1. Copy the included oasis examples into a separate test content directory.
+2. Choose stable identifiers and write the rooms, puzzles and exits.
+3. Point a local Development server at that directory with `--Pyramid:ContentDirectory "<absolute-content-directory>"`.
+4. Restart to validate the pack, then create a new expedition selecting its name.
+5. Test puzzle prerequisites, return routes, a missing tool and an offline companion holding a critical item.
+6. Test an existing save before distributing an update. Include the exact content version in server backups.
+
+The included base adventure is `Pyramid.Web/ContentPacks/oasis-of-stars.json`; `oasis-moon-addon.json` demonstrates a separate extension with a two-way portal. See the [developer walkthrough](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Developer-Walkthrough.md) for its solution and [deployment guide](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Deployment.md) for private content storage.
+
+An adventure is won when every realm with nonempty winFlags has all its flags set. Realms with empty winFlags are exploration areas. Completion records a finish time and the standard victory bonus once; players may continue exploring. The expanded Oasis of Stars is a complete three-realm example. See [its developer walkthrough](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Oasis-Walkthrough.md) for the full solution.
+
+## Descriptions that follow game state
+
+Room `description` remains the default. Optional `descriptionStates` is an ordered array of up to 40 rules. All conditions on a rule must match. The **last matching rule** supplies the replacement description. Rules read current realm puzzle flags and current-room loose items; an item held by any player is absent from the room. Returning or dropping an item updates the next LOOK automatically. Rules do not change saves, award points, consume items, or execute scripts.
+
+```json
+"descriptionStates": [
+  {
+    "presentItems": ["bronze key"],
+    "absentFlags": ["portal-open"],
+    "description": "A bronze key rests beside the closed arch."
+  },
+  {
+    "absentItems": ["bronze key"],
+    "absentFlags": ["portal-open"],
+    "description": "The arch is closed. The key is no longer here."
+  },
+  {
+    "requires": ["portal-open"],
+    "description": "Starlight shines through the open arch.",
+    "features": {"inscription": "The lock is settled; the eastern portal stays open."}
+  }
+]
+```
+
+Each rule requires nonempty `description` text (up to 2,000 characters). The four condition arrays default to empty: `requires` means all listed puzzle flags must be set; `absentFlags` means none may be set; `presentItems` means every named object must be loose in this room; `absentItems` means none may be loose here. An empty set of conditions always matches. Put more specific rules later. Flag references must exist in this realm. Item names use the normal lowercase item syntax and may include objects carried in from other rooms. A condition cannot require and exclude the same flag or object.
+
+Optional rule `features` overrides matching EXAMINE/READ text by feature name. Matching overrides merge over the room's permanent `features` in rule order; the last matching override of each key wins. Other feature text remains unchanged. Up to 40 features are allowed per rule, with the same names and text limits as permanent features. EXAMINE of an unknown feature falls back to the current conditional room description.
+
+Prefer neutral base descriptions for shelves, cushions and pedestals. The live `You see:` line already lists available objects. Avoid writing that an object is present in permanent prose unless a `presentItems` condition controls it. Likewise, give solved mechanisms a flag-based description and feature override so an open grate is not still described as locked.
+
+Older packs can omit `descriptionStates` entirely. The rules are recalculated from saved flags and room contents, including shared expedition state; no save migration is needed.
+
+## Passage kinds for maps
+
+A room may add an `exitKinds` object. Keys must match its existing exits; values are `passage`, `stairs`, `ladder`, `hole`, or `bridge`. For example, `"exitKinds": {"down":"stairs"}` marks an existing downward exit as a stairway. Describe both ends consistently, such as stairs down from the well and stairs up from the cistern. This metadata labels the map connection without changing direction, access requirements, or movement. Older rooms may omit it.
+
+## Readable items
+
+A complete pack or add-on can define `readableItems`, a dictionary from exact item names to plain text (up to 100 entries, 2000 characters each). For example: `"readableItems": {"papyrus scroll": "The river remembers the moon."}`. Place the corresponding item in a room's `items` list. READ requires the object to be carried or visible in the current room; unique short names work. The text is copied once into that player's journal. Repeated reading does not add duplicate notes; a full 100-entry journal still displays the writing. EXAMINE suggests READ. Add-ons cannot redefine a readable item already defined by the parent. The designer's Readables tab authors this dictionary.
+
+A readable object's text belongs to its adventure, not to a global item dictionary. The bundled Moon extension assigns its existing star-chart clue to `readableItems["star chart"]`; Chamber of the Gods supplies its separate built-in chart and lapis-tablet writing. READ first resolves an accessible item. If no item matches, a mod can answer from a current-room feature with that name. Use distinct names when portable writing and fixed scenery should remain easy to tell apart. Named READ/EXAMINE feature overrides follow the matching room-state rules.
+
+Built-in action synonyms such as FEED BIRD are not injected into custom puzzles. Author the command stated in your clue. Players can use a unique shortened name for READ, but ordinary mod GET/DROP commands still use the exact item names.
+
+
+========================================================================
+
+# HTTP API
+
+The API uses JSON and same-origin session cookies. All paths below are relative to the application prefix, for example `/pyramid/`. It is the bundled client API, not an API-key service.
+
+## Game and expedition routes
+
+```text
 GET  api/session          -> CSRF token, signed-in user, registration flag
 POST api/register         {name,email,password}; creates local explorer account
-POST api/login            {name,password}; name is verified email or explorer name
+POST api/login            {name,password}; name is explorer name, approved email or unique pending email
 POST api/logout           {}; ends session and puts explorer in trance
 GET  api/play             -> {game,party}; current personal projection
 POST api/play/command     {text,revision,expeditionId}; null ID means solo
@@ -144,6 +402,7 @@ GET  api/explorers        -> public progress for recent signed-in explorers
 GET  api/expeditions      -> {active,games,packs}; no private puzzle solutions
 POST api/expeditions/create {name,pack,open} -> new expedition ID
 POST api/expeditions/action {id,action,target}
+```
 
 Actions: resume, accept, decline, request, solo (empty id/target), open,
 close, invite (target=explorer name), approve/deny/revoke (target=user ID).
@@ -159,57 +418,462 @@ access are provided. Never put passwords or session cookies in URLs.
 Use game.revision and party.id from the most recent api/play. HTTP 409
 command responses include {error,play} containing the current state. Never
 blindly retry a mutation. HTTP 400 indicates validation, 401 sign-in needed,
-403 closed registration, and 429 rate limiting. Poll no faster than the
-bundled client's five seconds; the per-account limit is 120 requests/minute.
+403 denied access (including pending email verification), and 429 rate limiting. Poll no faster than the
+bundled client's five seconds; the game/account policy allows 120 requests/minute per account; authentication routes allow 12 requests/minute per source IP.
 Legacy api/game and api/command remain original-solo-only endpoints.
 
-LOCAL TESTING AND PRODUCTION
-Run RUN-WEB.ps1 for local Development only. BUILD-WEB.ps1 builds the client,
-runs automated checks and publishes server files. See DEPLOY-IIS.txt for
-Windows and DEPLOY-LINODE.txt for the future Linux production checklist.
-SQLite is the included transactional database; SQL Server is not required.
-Use one application instance with local disk, private data and persistent
-keys. Production on digitalrcs.com has not been deployed or tested by these
-local checks. Email recovery and an administrator console are included; see ACCOUNTS-AND-EMAIL.txt for operator setup.
+## Account and administrator routes
+
+All POST routes require X-Pyramid-CSRF and the same cookie jar. Paths are
+relative to /pyramid/ (or the configured application prefix).
+
+```text
+POST api/register {name,email,password}
+POST api/login {name,password}  name accepts explorer name, approved email or unique pending email
+POST api/forgot-password {email}
+POST api/reset-password {token,password}
+POST api/verify-email {token}
+GET  api/account
+POST api/account/email {email,password}  current password required
+POST api/account/resend-verification {}
+POST api/account/notifications {enabled}
+GET  api/admin/users  users, audit, logins, safe mail status
+POST api/admin/action {target,action,confirmation}  target is account ID
+POST api/admin/message {target,subject,message}
+```
+
+Do not expose internal bootstrap through HTTP. Existing game/session routes
+retain authorization and optimistic revision checks. session.user includes
+`isAdmin`, `isGod`, `role`, verification status and backup-import eligibility. Recovery tokens are never returned by public API responses.
+
+## Command flow
+
+1. Fetch `GET api/session` and retain its CSRF token and cookies.
+2. Submit `POST api/login`, then fetch the session again for the current token.
+3. If `verificationRequired` is true, complete verification or obtain administrator approval, then refresh the session. Otherwise fetch `GET api/expeditions` to select or resume a journey. Fetch `GET api/play` only when entering gameplay and retain `game.revision` and `party.id`.
+4. Submit the command with the same cookies and `X-Pyramid-CSRF` header:
+
+```json
+{"text":"look","revision":0,"expeditionId":null}
+```
+
+Replace the sample revision with the latest server value. Use the current party ID for shared play; `null` selects solo. On a conflict, inspect the returned state and let the player decide whether to try again.
+
+`play.game` includes `mapsUsed`, `bonusPoints`, `roomActivity`, `roomChanges` and `mapSnapshot`. `roomChanges` contains `visible`, `openRoutes` (directions) and `solved` (completed puzzle flags in the current room). Hidden rooms return empty route/flag arrays. The normal `solved` field is the explorer's numeric puzzle total. These observations support client-side sound notices; they are not command inputs.
+
+A purchased map snapshot contains `serial`, `realm`, `currentRoom`, `nodes` (`id`, `name`) and `edges` (`from`, `to`, `direction`, `kind`). Edge kinds are `passage`, `stairs`, `ladder`, `hole`, `bridge` or `portal`; clients should treat a missing kind as `passage`. Nodes and edges include only personally visited rooms within the current realm. A saved snapshot may be absent until purchase or after a world reset/switch; each `MAP` command costs two points.
+
+`GET api/play` wakes the caller in an active shared expedition, so avoid polling it while the player is choosing an adventure or editing a draft. Readable content uses the ordinary command endpoint (`READ <item>`); there is no server editor-upload or publishing endpoint. The designer exports data files for operator review.
+
+Basic administrator actions are `kick`, `suspend`, `restore` and `delete`; deletion requires the exact explorer name in `confirmation`. Additional actions are described below. The server checks administrator privileges for every action. See [accounts and email](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Accounts-and-Email.md) for retention and notification behavior.
+
+## Administration dashboard and backups
+
+`GET api/admin/users` also returns `overview` and `expeditions`, plus each explorer's online status, current room, moves, relics, solved puzzles, achievements, inventory and discovered-room count. These are private administrator responses, not public roster fields. Current progress reflects the active adventure.
+
+Additional `POST api/admin/action` actions:
+
+| Action | Request fields | Effect |
+| --- | --- | --- |
+| `approve` | `target` account ID, `confirmation` exact explorer name, `expectedEmail` displayed pending/current address | Manually approve the address. A changed address is rejected rather than approving unseen data. |
+| `reset-solo` | `target` account ID, `confirmation` exact explorer name | Reset the personal adventure. |
+| `reset-expedition` | `target` expedition ID, `confirmation` exact expedition name | Reset the shared world and all members' progress. |
+
+`GET api/admin/backup` downloads the private portable JSON export. `POST api/admin/backup/import` accepts `{confirmation:"REPLACE ALL DATA",backup:<parsed export object>}` with the usual session and CSRF protection. The selected export file is limited to 20 MiB. Successful import invalidates all sessions; obtain a fresh session and sign in with an account from the restored snapshot. Do not automatically retry import after a network error: first determine whether restoration completed.
+
+Exports contain password hashes and private account data. They exclude sessions, email tokens, queued mail, server credentials and content-pack files. See [Administration](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Administration.md) for restoration requirements and the private recovery export created before replacement.
+
+## Runtime administration settings
+
+`GET api/admin/settings` returns the current `revision`, `allowRegistration`, `publicBaseUrl`, `maintenanceMessage`, `donationUrl`, `supportUrl`, `chimesDefault`, and `mail` settings. Mail fields are `mode`, `host`, `port`, `username`, `fromAddress`, `senderName` and the boolean `passwordConfigured`; the password is never returned.
+
+`POST api/admin/settings` submits those editable values and the revision from the read. A stale revision returns HTTP 409; reload and review before resubmitting. Within `mail`, an omitted/blank `password` preserves the current secret. `clearPassword:true` removes it, but an enabled `Smtp` configuration cannot be saved without a password. The dashboard requires Disabled mode before offering this control. SMTP supports port 465 with implicit TLS or 587 with mandatory STARTTLS.
+
+`POST api/admin/settings/test-email {}` queues one test to the current administrator's approved email address using saved settings. It does not accept an arbitrary recipient. Test mail is an explicit action, separate from saving settings.
+
+`POST api/admin/logs/clear {kind,confirmation:"CLEAR LOGS"}` accepts `audit`, `logins` or `mail`. It clears only the selected history category; mail clearing excludes pending messages, and audit clearing creates a new record. Login counts and last-login values derived from deleted history are also cleared. All routes require an administrator session; POST requests require CSRF protection. None of these routes delete accounts or adventures.
+
+## Email-verification access gate
+
+Session users include `emailVerified`, `email`, `pendingEmail` and `verificationRequired`. A new or unapproved account receives a limited authenticated session. Account management, verification and sign-out remain available, but gameplay, command, explorer-roster and expedition routes return HTTP 403 with `code:"verification_required"` until the email is approved. Do not treat an authenticated cookie as permission to enter gameplay.
+
+Registration and login also report `verificationRequired`. Registration reports whether verification delivery was queued or disabled. The client should fetch the session again after verification or manual approval; the existing session can then access gameplay. Invalid verification links leave the gate in place. A verified account changing its email remains approved on its existing address until the replacement is confirmed. Signing in by explorer name or a unique pending email never bypasses the gate.
+
+## Role management
+
+`GET api/admin/roles` returns available roles and their assignability. `POST api/admin/role` accepts `{target,role,expectedRole,confirmation}`; `target` is the account ID and confirmation is the exact explorer name. Assignable roles are `explorer` and `admin`. The `god` owner role is not assignable through HTTP. Session/admin-user data include `role` and `isGod`; session data also report `canRestoreBackup`.
+
+Every role mutation requires administrative authorization and CSRF protection. A changed current role returns HTTP 409 so the administrator can review it again. Successful changes revoke the target's sessions and preserve adventures. Self-role changes and unsupported roles are rejected. The installation owner receives additional protection from ordinary administrator account actions and owner-containing expedition resets. On an owner-bound installation, backup import requires the owner and validates that the imported owner record remains intact and active.
+
+`canRestoreBackup` describes owner eligibility, not a grant of administrator access. Both the administrator check and the owner check are enforced by the import endpoint. The request body limit is 21 MiB including its wrapper; the bundled file picker accepts export files up to 20 MiB. Ordinary POST bodies are limited to 4 KiB, while settings updates allow 8 KiB.
 
 
-EXPLORATION AND COOPERATION UPDATE
-Opening-screen HOW TO PLAY explains getting started without signing in.
-EXPEDITIONS now has a saved/invited/open world dropdown. Invite an online
-explorer from the selector or enter an existing account name, even offline.
-An invitation is optional at creation: the host starts immediately and
-companions can accept later. An invalid invitation does not discard the
-newly created world.
-CLEAR erases only your saved command transcript, not your journal or game.
-MAP now costs 2 points each opening. The gold schematic contains only your
-visited rooms and connections between them in the current realm. It is a
-paid snapshot, not a live location tracker; no unexplored nodes appear.
-Room-entry chimes signal visible items, unfinished puzzles or authored
-features. CHIMES ON/OFF stores your sound preference in this browser.
+========================================================================
 
-BONUS POINTS
-+1 per newly discovered non-starting room; +10 for fully surveying a realm.
-+5 to an item giver after acceptance, once per distinct non-lamp item, up
- to three rewarded items per level/realm per giver.
-+3 for your first journal share that adds new information to a companion,
- once per expedition. Unchanged notes and chat messages earn no bonuses.
-Rewards and map costs survive saves. Repeated visits or passing the same
-item back cannot repeatedly reward the same giver. Costs accrue at zero
-score and are offset by later earnings, as with hints.
-API play.game adds mapsUsed, bonusPoints, roomActivity and mapSnapshot.
-mapSnapshot is null before MAP; after payment it includes serial, realm,
-currentRoom, nodes [{id,name}] and edges [{from,to,direction}]. Only current
-realm rooms personally visited are included. In co-op the costs/rewards,
-visited history and transcript are personal, not shared with teammates.
+# Accounts, recovery and administration
+
+The server stores accounts, password hashes, sessions, solo/shared progress, verified/pending email addresses, permissions, login history, audit events, recovery tokens and an email outbox in a private SQLite database. Startup applies schema migrations in place. Back up the database and key directory together before upgrades and validate on a copy first. No SQL Server connection is required; use one application instance on local storage.
+
+Existing players can continue signing in with their explorer name. Account
+lets them add email after confirming their current password. New registration
+asks for email plus an explorer name. Email stays private and is not added
+to the public explorers list. Email verification or explicit administrator approval is required before gameplay and email recovery. Signing in by explorer name or a uniquely matching pending email opens a limited account session until approval; it does not bypass verification.
+
+Forgot password sends a generic response regardless of account existence.
+For a matching verified account, it queues a link valid for 30 minutes.
+The link allows setting a new password, never retrieving the old one.
+Successful reset revokes all existing sessions and leaves companions in a
+trance. Tokens are single-use and stored as hashes. Verification links last
+24 hours. Opening an email link does not perform the action: the user must
+submit the verification/reset form. Link tokens use URL fragments and are
+removed from the browser address by the client.
+
+Account notification preferences control expedition invitations and admin
+information messages. Requested verification and recovery messages still
+work when these optional messages are disabled. In-game invitations require an existing explorer account. Email delivery additionally requires an approved address, enabled notifications and a nonsuspended account. An invited unverified explorer must complete approval before accessing expeditions. Opening a link never joins a world automatically; the user signs in, selects it, then accepts.
+
+## Verification before play
+
+New accounts must confirm their email link or receive explicit administrator approval before entering the game. Registration creates a limited session so the explorer can read the verification instructions, resend the link, correct the email address, manage their account or sign out. Gameplay, room commands, the explorer roster and expedition endpoints reject that session until approval. Signing out and back in does not remove the requirement.
+
+After successful verification, the existing session can enter the game; the server checks current approval rather than trusting a stale browser flag. Invalid, expired or already-used links do not grant access. If a previously verified explorer requests a different email address, their existing approved address and gameplay access remain active while the replacement is pending.
+
+When email delivery is disabled, the account still requires approval. Contact an administrator rather than expecting an unavailable verification message. A pending email may be used for limited sign-in only when it identifies one account unambiguously; use the explorer name if it is ambiguous. Recovery still requires an approved address.
+
+## Administrator controls
+
+Admin is shown only for an administrator; all routes also check the role
+on the server. It lists users, effective current level/score, login counts,
+recent successful/failed sign-ins, moderation audit and mail status counts.
+
+Kick ends all sessions and preserves progress; the user can sign in again.
+Suspend ends sessions and prevents sign-in until an administrator restores
+access. Delete requires typing the exact username. It removes the account,
+solo save, party membership, tokens, login records and queued mail. Shared
+expeditions with remaining members survive: ownership transfers, non-lamp
+carried items return to the room, and empty expeditions are removed. Audit
+records retain internal actor/target IDs. Shared notes/messages already
+received by other users, private backups and Development capture files are
+not retroactively erased. Do not describe this as comprehensive erasure of
+all historical copies. The current administrator cannot kick, suspend or delete their own account. Manual email approval and a personal-adventure reset are available for their own account.
+
+The Admin email form sends plain-text information to a selected verified
+explorer who has notifications enabled. Delivery is queued, not proof of
+inbox receipt. Status counts distinguish pending, sent, failed and captured.
+No password hashes, recovery tokens, SMTP passwords or email bodies appear
+in the dashboard user-list response. The separate private backup download does include password hashes.
+
+See [Administration](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Administration.md) for the dedicated dashboard, manual email approval, personal/shared adventure resets and portable JSON backup/import. The dashboard is available at /pyramid/admin for an installation beneath /pyramid/.
+
+## First administrator
+
+Register the intended account first. Run this once from the published application's directory using its normal environment and private data directory:
+
+```text
+dotnet Pyramid.Web.dll --Pyramid:DataDirectory "<private-data-directory>" --Pyramid:BootstrapAdmin "<existing-explorer-name>" --Pyramid:BootstrapOnly true
+```
+
+An optional `--Pyramid:BootstrapEmail "<email-address>"` queues verification; it does not verify the address automatically. Remove bootstrap settings after the operation. The first public registrant never becomes an administrator automatically.
+
+## SMTP configuration
+
+Default mail mode is `Disabled`. Configure `Smtp` through protected host configuration outside the repository and published assets:
+
+```text
+Pyramid__PublicBaseUrl=https://example.com/pyramid/
+Pyramid__Mail__Mode=Smtp
+Pyramid__Mail__Host=<smtp-host>
+Pyramid__Mail__Port=465
+Pyramid__Mail__Username=<smtp-account>
+Pyramid__Mail__FromAddress=<authorized-sender-address>
+Pyramid__Mail__SenderName=Pyramid
+Pyramid__Mail__Password=<secret-from-protected-storage>
+```
+
+Port 465 uses implicit TLS; port 587 requires STARTTLS. Certificate validation stays enabled. Use an authorized sender address and check outbound access on the chosen port. `PublicBaseUrl` must match the trusted HTTPS deployment URL, including the application folder. It is not derived from request headers.
+
+The SQLite outbox encrypts message payloads with ASP.NET Data Protection, retries delivery up to six times, and clears payloads after completion or failure. Preserve the key directory with the database. Delivery rechecks the account, verified address and notification preference. A crash after provider acceptance can cause duplicate delivery; a sent status does not prove inbox receipt. Old queue metadata is cleaned after 30 days. Approximately 10,000 recent login events are retained; the admin page shows the most recent 100.
+
+## Development mail
+
+Use `Capture` mode and a separate test database to exercise links without sending real messages. Set a loopback `PublicBaseUrl`. Captured `.eml` files appear in the private data directory's `MailCapture` folder and contain usable test links. Capture mode is rejected in Production. Never commit those files.
+
+The Windows `RUN-LOCAL-MAIL.ps1` helper can load an external JSON configuration and a DPAPI-encrypted password file. Run it as the Windows identity that encrypted the password. Do not copy Windows DPAPI secrets to a Linux host. Production has its own protected configuration.
+
+See [deployment](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Deployment.md) for filesystem permissions, backup and restore, and the [API reference](https://github.com/digitalrcs/PyramidGame/blob/main/docs/API.md) for account routes.
+
+## Editing settings from the dashboard
+
+Administrators can edit SMTP and site preferences in **Settings**. The dashboard returns only a password-configured indicator, never the password. Blank password input retains the current secret; replacement is explicit, and clearing requires disabled delivery. Runtime settings are protected privately on the server and excluded from portable gameplay exports. See [Administration](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Administration.md) for revision conflicts, test delivery, registration and log maintenance. Environment configuration remains suitable for initial deployment; include protected runtime settings and their key material in complete host backups.
+
+## Installation owner
+
+An operator can bind one existing active account as the installation owner using `--Pyramid:BootstrapGod "<existing-explorer-name>" --Pyramid:BootstrapOnly true` with the installation's normal data/configuration. Use the exact explorer name. This promotes that account to administrator and binds the GOD role; it does not approve email. A different account cannot replace an existing owner through this command. Owner protections and restore requirements are described in [Administration](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Administration.md).
+
+Saved dashboard settings override initial environment mail settings. For a restored test database, do not assume `Pyramid__Mail__Mode=Disabled` overrides an existing saved SMTP configuration; isolate outbound mail before starting the worker.
 
 
-ACCOUNTS AND EMAIL
-New accounts provide an email plus an explorer name. Confirm the emailed
-verification link to enable email sign-in, password resets and invitations.
-Existing explorers may still sign in by username and add email in Account.
-Forgot password sends a single-use reset link; passwords cannot be retrieved.
-Account controls optional invitation/information emails. An invitation link
-opens the expedition selector; you must still sign in and accept.
-Admins can kick sessions, suspend/restore access, delete accounts with typed
-confirmation, review activity and email verified explorers. Administrators
-are assigned by the server operator, never automatically at registration.
+========================================================================
+
+# Administration
+
+Open **Admin** from the game header, or **Menu → Administration** on a phone. The dedicated dashboard lives at `/pyramid/admin` when the application is installed under `/pyramid/`. Sign in with an administrator account; every administration API also enforces the role on the server.
+
+## Explorers and activity
+
+The overview counts explorers, online users, pending email approvals, shared expeditions, completed adventures and suspended accounts. Search explorers by name or email and filter by online, pending, suspended or administrator status. The page refreshes read-only information every 15 seconds while visible, preserving the selected explorer and unfinished forms.
+
+Select an explorer to review their email status, registration and sign-in history, current location, level, score, moves, discoveries, inventory and achievements. Progress reflects the currently active personal or shared adventure. Online status requires a valid session and activity within the last 45 seconds; it is not a guarantee that someone is looking at their screen.
+
+**Activity & email** shows recent administrative actions, successful and failed sign-ins, and outgoing mail status. A sent message means the mail provider accepted it, not that it reached the recipient's inbox. The email form requires an approved address and the explorer's notification preference permits delivery.
+
+## Account actions
+
+| Action | Effect |
+| --- | --- |
+| Kick | End current sessions. The explorer can sign in again; progress is preserved. |
+| Suspend | End sessions and prevent sign-in until access is restored. |
+| Restore access | Remove suspension. It does not approve an email address or reset an adventure. |
+| Approve email manually | Approve the displayed pending/current address without following an emailed verification link. Requires the exact explorer name and records the administrative approval. |
+| Reset personal adventure | Return the personal adventure to its beginning, clearing its progress, inventory, score and achievements. Shared expedition progress remains separate. Requires the exact explorer name. |
+| Delete account and data | Remove the account and personal save. Requires the exact explorer name. See [accounts and email](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Accounts-and-Email.md) for shared-world handling and retained history. |
+
+For manual approval, check the address shown before submitting. The server rejects approval if that address has changed since the form was prepared. Email approval unlocks gameplay and enables email recovery; it does not remove an existing suspension. Administrators can approve their own email and reset their own personal adventure, but cannot kick, suspend or delete their current account from this screen.
+
+## Shared expedition resets
+
+The **Expeditions** section shows owners, members, locations, online status, content packs, invitations and join requests. Expand **Reset shared expedition** and type its exact name to confirm. This returns the world and every member's expedition progress, inventory and achievements to the beginning. Coordinate with the group before resetting a shared world.
+
+## Portable backups
+
+Use **Backups → Download backup** to export a JSON snapshot of accounts and gameplay. It includes users, password hashes, email addresses, personal saves, shared expeditions, active-game selections, login history and audit records. Treat the download as private account data: store it securely and never attach it to public issues or commit it to Git.
+
+The export excludes server settings and SMTP credentials, Data Protection keys, content-pack files, sessions, email tokens and the outgoing mail queue. Keep matching content packs separately. This export is useful for gameplay recovery and migration; it does not replace a complete host backup. See [deployment](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Deployment.md).
+
+To restore:
+
+1. Use the GOD owner account when this installation has an owner binding; otherwise use an administrator. Install compatible versions of the content packs referenced by the backup on the destination server.
+2. Open **Backups**, select the JSON file (at most 20 MiB), and check that it is the intended snapshot.
+3. Type **REPLACE ALL DATA**, then select **Restore backup**.
+4. Sign in using an administrator account from the imported backup.
+
+Restoration replaces all accounts and game progress. Every existing session is revoked, including the administrator's. Selecting a file alone does not import anything. Before replacement, the server writes a recovery export into `ImportRecovery` beneath its private data directory. If the imported backup removes the administrator account you were using, an operator with filesystem access must retrieve that recovery file; keep a known administrator login from the imported backup available before proceeding.
+
+The importer validates the snapshot and its references against installed content. A rejected file leaves the current data in place. Configure the web server's upload limit for the import endpoint as described in the deployment guide.
+
+## Runtime settings
+
+Open **Settings** to manage registration, the public game URL, a site announcement, donation/support links, the default chime preference and email delivery. These settings apply to the current installation without changing gameplay prices or campaign rules. Hosting, TLS certificates and scheduled filesystem backups remain operator-managed.
+
+Closing registration prevents new accounts while existing explorers can still sign in. An announcement is an informational banner; it does not stop gameplay. A saved browser sound preference takes precedence over the server's default chime setting.
+
+Email settings include delivery mode, hostname, port, SMTP username, sender address/name and a replacement password. Port **465** uses implicit TLS; **587** requires STARTTLS. Certificate validation remains enabled. The public game URL is used in verification, recovery and invitation links and must include the application folder. SMTP settings should use the provider's authorized sender and application password where required.
+
+The password field is write-only. The dashboard reports whether a password is configured but never returns it. Leave it blank to retain the current secret, enter a replacement to change it, or disable delivery before selecting **Clear the configured SMTP password**. The SMTP password is encrypted inside the private SQLite settings record and are excluded from portable gameplay exports; preserve the server's key material and protected settings in complete host backups.
+
+Save before using **Send test email**. That button queues one test message to the approved address of the currently signed-in administrator. Merely opening the form or saving settings does not send a test message. Check **Activity & email** for delivery status. Development capture mode writes a private test message instead of contacting a mail provider.
+
+Settings carry a revision number. If another administrator saves first, the server rejects the stale update. Choose **Reload saved settings**, review the current values, then reapply your changes. Reload discards unsaved edits; the dashboard's normal background refresh never overwrites the settings form.
+
+## Lists and log maintenance
+
+Explorer, expedition, member and activity lists scroll within the dashboard. Focus a scroll area to use the keyboard, or swipe it on a phone. **Clear filters** resets the explorer search and status filter; it never deletes accounts or adventures.
+
+**Activity & email** has separate clearing controls for administrator activity, sign-in history and completed email delivery records. Expand the desired control and type **CLEAR LOGS**. Clearing sign-in history also clears total-login and last-login statistics derived from those records. Clearing administrator activity retains a new audit record of the clearing action. Clearing completed mail records leaves pending delivery queued. No control bulk-deletes accounts or gameplay, and the other log categories remain unchanged.
+
+
+## Roles and the installation owner
+
+**Explorer** and **Administrator** are the assignable account roles. Choose another explorer, review their current role, select the new role and type their exact name to confirm. Role changes end that account's existing sessions; the explorer signs in again with the new permissions. Saved adventures are preserved. Stale role changes are rejected, and an administrator cannot change their own role through the dashboard.
+
+**GOD** identifies the installation owner. It is provisioned only by an operator using the explicit `Pyramid:BootstrapGod` option for an existing active account, together with `Pyramid:BootstrapOnly true`. Registration, the role picker and ordinary administrator APIs cannot grant this role. Remove bootstrap arguments after the one-time operation.
+
+Ordinary administrators cannot demote, kick, suspend, delete, manually approve or reset the bound owner's account, or reset shared expeditions containing that owner. Once an owner is bound, full backup import is owner-only. Imported data must retain that same owner identity as an active administrator; an import attempting to rename, remove, suspend or demote it is rejected before replacement.
+
+The owner binding belongs to the installation and is excluded from portable gameplay exports. Importing a file cannot install a different owner. Keep the binding in complete host backups and follow operator recovery procedures when moving an installation. The role catalog reserves no working moderator role: only roles actually implemented by the server can be selected.
+
+Runtime settings saved through this dashboard take precedence over initial environment settings, including email mode and sender configuration. Changing an environment variable later does not replace that saved record. The GOD role currently provides owner protection and restore authority; it does not enable puzzle cheats or a debug console.
+
+Adventure installation remains an operator task. The browser designer stores drafts on the author's device and exports JSON; the dashboard does not accept uploads or automatically publish user-authored packs. See [Modding](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Modding.md) for validation and installation.
+
+
+========================================================================
+
+# Development
+
+The web edition is an ASP.NET Core 10 application with a React 19/Vite frontend and SQLite storage. The separate Python edition is kept at the repository root.
+
+## Build and run
+
+Install the .NET 10 SDK and Node.js 22 LTS (22.12 or newer in that release line). Python 3 is needed for the classic edition and HTTP checks. From the repository root in PowerShell:
+
+```powershell
+.\BUILD-WEB.ps1
+.\RUN-WEB.ps1
+```
+
+The build installs locked frontend dependencies, builds the client, runs the .NET checks and publishes to `artifacts/release`. The launcher serves Development at `http://localhost:5188/pyramid/`. Stop it with Ctrl+C. Build output and local saves are not source files.
+
+For an isolated test database:
+
+```powershell
+$testData = Join-Path $PWD 'artifacts/test-data'
+dotnet run --project Pyramid.Web -- --urls http://127.0.0.1:5190 --environment Development --Pyramid:PathBase /pyramid --Pyramid:DataDirectory "$testData"
+```
+
+Restart with the same data directory to check persistence. Use separate browser profiles for multiplayer accounts; normal tabs share cookies. Never point mutation tests at production or reuse production passwords.
+
+## Source map
+
+| Area | Files |
+| --- | --- |
+| Built-in campaign and changing scenery | `Pyramid.Web/Game/World.cs`, `Engine.cs`, `RoomNarrative.cs` |
+| Object names and readable clues | `Pyramid.Web/Game/CommandAliases.cs`, `ReadableItems.cs` |
+| Maps and exploration rewards | `Pyramid.Web/Game/Exploration.cs`, `Client/src/mapLayout.js` |
+| Room sound events | `Pyramid.Web/Client/src/roomChimeEvents.js`, `roomChime.js` |
+| Adventure library and designer | `Pyramid.Web/Client/src/AdventureHub.jsx`, `AdventureEditor.jsx` |
+| Shared-world command rules | `Pyramid.Web/Game/Cooperation.cs` |
+| Persistence and admission | `Pyramid.Web/Storage.cs` and related partial files |
+| JSON adventures | `Pyramid.Web/Game/ContentPacks.cs`, `ModEngine.cs` |
+| HTTP host and routes | `Pyramid.Web/Program.cs` and account endpoints |
+| React client | `Pyramid.Web/Client/src` |
+| Room illustrations and public assets | `Pyramid.Web/Client/public` |
+| Sample content | `Pyramid.Web/ContentPacks` |
+| Engine, storage, account and mail checks | `Pyramid.Tests` |
+
+State changes, authorization, score calculations and map visibility belong on the server. Do not expose private puzzle solutions or unvisited room graphs to simplify the client. Preserve revision conflict handling and the distinction between personal and shared state.
+
+## Verification
+
+```powershell
+dotnet run --project Pyramid.Tests -c Release
+node Pyramid.Web/Client/src/mapLayout.test.mjs
+node Pyramid.Web/Client/src/roomChimeEvents.test.mjs
+python -m unittest test_pyramid2000.py
+```
+
+GitHub Actions runs the frontend build, both Node checks, the .NET suite, and the classic Python tests. `BUILD-WEB.ps1` builds and publishes the app and runs the .NET suite; run the Node and Python commands above separately when using that helper.
+
+The Node checks cover known-room filtering, relative floors, one-way and portal routes, and room-event detection without playing audio. The .NET suite covers both adventures, changing room descriptions, shared state, persistence, account verification, permissions, backups, and settings.
+
+HTTP integration scripts create accounts and change saves. They are manual fixture tools rather than part of the default CI job. The older `http_checks.py` and `http_coop_checks.py` registration flows predate mandatory email verification; update their setup before using them against the current server. Account recovery checks also need a disposable administrator and Capture-mode mail setup; inspect `http_account_checks.py` before running it.
+
+`http_verification_checks.py` requires a fresh disposable Capture-mode server at `http://127.0.0.1:5198/pyramid/`, an empty database, and a `VERIFICATION-QA.marker` in its data directory. It writes local fixture credentials for subsequent role checks; keep that directory under ignored `artifacts/` and never commit it. `http_role_checks.py` consumes that fixture and also requires its owner binding to be provisioned. Read each script's prerequisites before running it with `--data <isolated-directory>`; do not point these scripts at production.
+
+Browser verification should cover sign-in, guides, room art, expedition invitations, independent movement, consent-based item transfers, refresh/resume, visited-only maps and their cost, CLEAR, and audible chimes. Check that picked-up objects disappear from LOOK, dropped objects appear in their new room, and solved mechanisms describe their current state. Check relative-floor maps, one-way holes, and accessible route labels. Verify distinct room-change, puzzle, and arrival cues with sound enabled; also check muted mode and unchanged polling. Check both a desktop and a narrow mobile viewport. An error-free console does not establish audible output.
+
+The [developer walkthrough](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Developer-Walkthrough.md) supplies all campaign solutions and multiplayer checkpoints. The [deployment guide](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Deployment.md) covers installation and recovery.
+
+
+========================================================================
+
+# Deployment and recovery
+
+Pyramid is a server application. A static hosting folder cannot run it. Use one application instance, a local SQLite database and persistent private keys. The application can sit beneath an existing site at `/pyramid/` on IIS or behind nginx on Linux.
+
+All paths and hostnames below are examples. Keep deployment secrets and player data outside source control and web roots.
+
+## Build
+
+Build the frontend before publishing the server. `BUILD-WEB.ps1` performs the frontend build, .NET checks and framework-dependent publish for IIS. For a self-contained Linux x64 release, after building the frontend:
+
+```text
+dotnet publish Pyramid.Web -c Release -r linux-x64 --self-contained true -o artifacts/linux-release
+```
+
+Self-contained publishing includes the .NET runtime; rebuild and redeploy when servicing that runtime. The host still needs the operating system libraries required by .NET. Keep the previous release available for rollback.
+
+## Shared production settings
+
+| Setting | Purpose |
+| --- | --- |
+| `ASPNETCORE_ENVIRONMENT=Production` | Enforces production behavior, including HTTPS |
+| `AllowedHosts=example.com` | Restricts accepted host names; separate additional hosts with semicolons |
+| `Pyramid__DataDirectory=<private-directory>` | SQLite database and persistent `keys/` |
+| `Pyramid__ContentDirectory=<content-directory>` | Reviewed JSON packs outside the public web root |
+| `Pyramid__AllowRegistration=true` | Set false to close registration |
+| `Pyramid__PublicBaseUrl=https://example.com/pyramid/` | Trusted base URL for email links |
+
+Configure mail and explicitly promote an existing administrator as described in [accounts and email](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Accounts-and-Email.md). Do not leave bootstrap settings enabled. Do not run Capture-mode email in Production.
+
+## IIS
+
+1. Install the serviced .NET 10 Hosting Bundle and configure HTTPS on the parent site.
+2. Create a dedicated 64-bit application pool with No Managed Code and one worker process.
+3. Add a child **Application** named `pyramid` with its own physical directory and pool. A virtual directory alone is insufficient.
+4. Copy the published output into the child application's directory. Preserve the parent site's files and configuration.
+5. Give the pool read/execute access to the release and Modify access only to the private data directory.
+6. Configure production environment variables in the child application's `aspNetCore` element. Preserve these host-specific settings on upgrades.
+
+IIS supplies the application path. Do not set `Pyramid__PathBase` for ordinary IIS child-application hosting. Exclude the child application from parent rewrite rules if necessary. Do not overwrite the parent `web.config` with the publish-generated child configuration.
+
+Windows production keys use machine DPAPI as well as filesystem permissions. They cannot simply be copied to a different machine and decrypted there. Plan key rotation and renewed sign-ins when moving between hosts; retain the original backup for recovery.
+
+## Linux and nginx
+
+Run the application as a dedicated unprivileged service identity. Keep releases read-only to that identity, with write access to its private data directory. Bind Kestrel to loopback, for example `http://127.0.0.1:5188`, and configure:
+
+```text
+Pyramid__PathBase=/pyramid
+Pyramid__TrustedProxy=127.0.0.1
+```
+
+Trust only the actual reverse proxy address. Preserve the prefix in the nginx proxy route:
+
+```nginx
+location = /pyramid { return 308 /pyramid/; }
+location ^~ /pyramid/ {
+    proxy_pass http://127.0.0.1:5188;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Connection "";
+    client_max_body_size 8k;
+}
+```
+
+The `^~` prefix keeps a parent site's asset regex from intercepting game assets. Configure this inside the existing HTTPS server block, validate with `nginx -t`, and reload only after validation succeeds. Keep the main site's root and routes intact.
+
+Store the service environment file outside the release with restrictive permissions. A systemd service should restart on failure, use a restrictive umask, and allow writes only where required. Database and keys must not be downloadable through nginx. Linux keys rely on private filesystem permissions unless the operator adds another key-protection mechanism.
+
+## Backups and restore
+
+Back up the SQLite database, Data Protection keys, exact content packs, custom mod images and protected configuration together. Keep backups outside every web root with restricted access. Set retention and disk monitoring appropriate to the host.
+
+For a simple consistent backup, stop only the game service or application pool, copy the complete private data directory and matching content/configuration, then restart. For an online backup, use SQLite's backup API. Copying an active `.db` alone can omit committed WAL data.
+
+Test restoration into a separate private directory and instance, isolated from outbound mail and public traffic. Saved dashboard settings override environment defaults, so environment variables alone may not disable restored SMTP or registration. Keep the test host isolated until its runtime settings have been reviewed. Confirm database integrity, expected account/progress records and application startup. Do not send old queued messages during a restore test. Confirm key portability before moving between machines or operating systems.
+
+During an upgrade, retain external data and keys, back up first, replace the release, restart, then verify. A code rollback may also need its matching database/content backup if a migration changed their format. Do not delete the previous release or backup until the new version is verified.
+
+## Post-deployment checks
+
+- `/pyramid/` loads over HTTPS and `/pyramid/health` returns `{"status":"ok"}`.
+- The parent website still loads unchanged.
+- Assets and API requests remain beneath the application prefix.
+- Session cookies are Secure, HttpOnly, SameSite=Strict and path-scoped.
+- Anonymous private API requests fail; POST requests without valid CSRF fail.
+- Two disposable accounts can maintain separate solo saves and cooperate in a shared expedition.
+- Progress survives sign-out and a service restart.
+- Private database, keys, content definitions and configuration cannot be downloaded.
+- Verification/recovery links use the public HTTPS URL; verify SMTP acceptance separately from inbox delivery.
+- Remove disposable verification accounts after testing and confirm backup restoration.
+
+A subfolder shares its browser origin with the parent website. Keep that site trusted and maintained. This architecture is not a web farm: horizontal scaling needs coordinated rate limits and a suitable shared persistence design.
+
+## Portable gameplay backup and import
+
+The [administration dashboard](https://github.com/digitalrcs/PyramidGame/blob/main/docs/Administration.md) can export accounts and gameplay as private JSON and restore them on a compatible installation. Keep installed content packs alongside these exports. The export does not include SMTP/settings, Data Protection keys, content files, sessions, recovery tokens or queued email; continue taking complete host backups as described above.
+
+The import form accepts a JSON file up to 20 MiB and wraps it in a request object. Reverse proxies and IIS request filtering must allow that body size specifically on `/pyramid/api/admin/backup/import`, including a little allowance for the wrapper. Keep the smaller limit on normal gameplay routes. Follow the supplied deployment templates rather than increasing every endpoint's allowance. Application-level administrator, CSRF, size and snapshot validation still apply.
+
+Before import, the application writes a recovery JSON export beneath the private data directory in `ImportRecovery`. That directory must remain outside the web root, writable by the service and restricted to the application/operator. Include it in retention and disk-capacity planning. Import replaces all accounts and game state and revokes all sessions. If an imported snapshot removes the previous administrator, recovery requires an administrator login from that snapshot or an operator retrieving the pre-import export.
+
+## Upgrade preflight and content preservation
+
+Against a private copy of the database and matching keys, use the new release with its normal protected configuration and `--Pyramid:ValidateOnly true`. This applies schema migrations and validates content/settings without opening a listener or starting the mail worker. It does modify the selected database: point it at the rehearsal copy first. Compare account, adventure and settings records before activating the release. Never substitute an empty development database for production data.
+
+Keep the persistent data path and Data Protection application/key configuration stable across releases. Preserve administrator-installed packs and images, but review and install updated bundled packs from the release as well; blindly copying an entire old ContentPacks directory over the new release can discard new features and fixes. Keep stable pack, realm and room IDs so saved adventures continue to resolve. The browser designer's local drafts are not included in server backups; authors must export them separately.
+
+Complete host backups include the `installation_owner` binding and `site_settings` database records. Portable gameplay exports intentionally exclude both, and cannot transfer or replace GOD ownership. On an owner-bound installation, portable import requires that owner and must preserve its account ID, exact name and active administrator role.

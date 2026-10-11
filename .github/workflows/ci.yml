@@ -42,6 +42,12 @@ jobs:
         run: npm run build
         working-directory: Pyramid.Web/Client
 
+      - name: Check map layout and room sound events
+        run: |
+          node src/mapLayout.test.mjs
+          node src/roomChimeEvents.test.mjs
+        working-directory: Pyramid.Web/Client
+
       - name: Check engine and storage
         run: dotnet run --project Pyramid.Tests -c Release
 

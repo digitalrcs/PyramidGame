@@ -49,3 +49,9 @@ lets you return to your original solo save or resume another shared world.
 Use the expedition dropdown to select a saved, invited or open world. When creating an expedition, choose an online explorer or type the name of an existing offline account. Inviting someone is optional: the host can begin immediately, and a companion can accept later. An invitation does not create an account.
 
 Your solo save remains available through the expedition selector. See the [player guide](Player-Guide.md) for commands and rewards and [accounts and email](Accounts-and-Email.md) for notification behavior.
+
+## Shared changes and private discoveries
+
+A companion can open a route or pick up an object while you remain in the room. The live object list and authored conditional descriptions use the shared world state; LOOK gives the latest scene. Arrivals and visible changes can produce a short notice and sound. Repeated refreshes do not keep replaying an unchanged event. CHIMES OFF mutes all game cues in your browser without affecting anyone else.
+
+Maps and journals remain personal. A companion exploring upstairs does not reveal those rooms on your map. Reading a portable item adds its writing only to your journal; use SHARE JOURNAL when you want to pass the clues on. Objects held by another explorer are not readable from your own inventory or room view. Offer and accept the object, or share the information in person.

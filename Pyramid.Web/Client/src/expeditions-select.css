@@ -5,3 +5,11 @@
 .expeditions .join-request{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
 .expeditions .join-request p{margin-bottom:8px}
 .expeditions .world-row p{margin-bottom:12px}
+.adventure-choices{border:0;padding:0;margin:18px 0;display:grid;gap:12px;min-width:0}
+.adventure-choices legend{margin-bottom:10px}
+.expeditions .adventure-choice{display:flex;flex-direction:row;align-items:flex-start;gap:12px;border:1px solid var(--line);padding:16px;cursor:pointer}
+.expeditions .adventure-choice.chosen{border-color:var(--gold);background:rgba(210,174,105,.06)}
+.expeditions .adventure-choice input{width:auto;margin:4px 0 0;accent-color:var(--gold);flex:none}
+.adventure-choice>span{display:grid;gap:8px;min-width:0}
+.adventure-choice strong{color:var(--gold);font-size:16px}
+.adventure-choice small,.adventure-choice span span{font-size:12px;line-height:1.7}

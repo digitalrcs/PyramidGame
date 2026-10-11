@@ -1,8 +1,8 @@
-# Pyramid · Chamber of the Gods
+# Pyramid · Text Adventures
 
-A text adventure beneath the sands. Six levels, eighteen relics, and one final puzzle in the Chamber of the Gods.
+Two adventures beneath the sands. Explore alone, gather an expedition, or build a world of your own.
 
-[Play in your browser](https://digitalrcs.com/pyramid/) · [Player guide](docs/Player-Guide.md) · [Wiki](https://github.com/digitalrcs/PyramidGame/wiki) · [Build locally](docs/Development.md)
+Visit [https://digitalrcs.com/pyramid](https://digitalrcs.com/pyramid) · [Player guide](docs/Player-Guide.md) · [Wiki](https://github.com/digitalrcs/PyramidGame/wiki) · [Build locally](docs/Development.md)
 
 ![Pyramid's gold-on-black adventure interface, with room artwork, explorer progress and inventory](docs/images/gameplay.png)
 
@@ -10,20 +10,28 @@ Pyramid brings the deliberate pace of a classic text adventure to the web: read 
 
 Play alone or invite companions into a shared expedition. Split up at a crossroads, meet again to compare clues, and pass an item to the explorer who needs it. Everyone keeps a separate location and satchel; the world remembers what the group has accomplished.
 
+After sign-in, the adventure library offers saved journeys and new expeditions. Choose **Chamber of the Gods**, the six-level campaign, or **The Oasis of Stars**, a 22-room adventure across three realms built from JSON content packs. Each expedition keeps its own saved progress.
+
+![Adventure library with saved journeys and illustrated adventure cards](docs/images/adventure-library.png)
+
 ## Inside the pyramid
 
 - **Six connected levels.** Explore 60 rooms across the Buried Gate, Drowned Archive, Observatory, Halls of Echoes, Hall of Judgment and Chamber of the Gods.
 - **Shared expeditions.** Invite named explorers or approve requests to join. Companions can arrive later, and an absent player remains in a trance until returning.
 - **Persistent progress.** Solo and shared adventures save after commands. Locations, inventory, discoveries and achievements survive sign-out.
-- **Maps you earn.** Reveal only the rooms you have visited. A map costs two points; a hint costs five. Exploration and cooperation offer bonus points.
-- **Room illustrations and sound.** Sixty gold pixel scenes accompany the text. Optional chimes draw attention to things worth investigating.
-- **New worlds in JSON.** Add content packs, puzzles and portals without rebuilding the core campaign.
+- **Maps you earn.** Reveal only visited rooms, with relative floors and labeled stairs, ladders, holes, bridges and portals. One-way arrows show permitted travel. A map costs two points; a hint costs five. Switching map views is free.
+- **A world that remembers.** Room descriptions reflect collected objects, dropped items and solved mechanisms. READ copies supported tablets, charts and authored scrolls into your journal once. Common command aliases make exploration less brittle.
+- **Room illustrations and sound.** Gold pixel scenes accompany the text. Distinct optional cues mark room changes, companion arrivals, points, puzzle success and victory.
+- **Mobile play.** Touch-friendly panels, a compact menu and room-and-route map cards keep exploration readable on phones without changing the desktop layout.
+- **Administration.** A dedicated dashboard manages accounts, roles, online activity, email approvals, adventure resets, settings, logs and portable gameplay backups.
+- **Adventure designer.** Build rooms, puzzles, portals, readable items and conditional descriptions in the browser. Preview room states, then export a JSON pack for administrator review and installation.
+- **New worlds in JSON.** Content packs extend the game without rebuilding its engines. Designer drafts stay on the current device; export them to keep a backup.
 
 ![The Pyramid welcome screen with DigitalRCS branding and links to the player guides](docs/images/welcome.png)
 
 ## Start exploring
 
-Open the [live game](https://digitalrcs.com/pyramid/), create an explorer, and begin a solo adventure or shared expedition. For a solo adventure, try:
+Open the [live game](https://digitalrcs.com/pyramid/), create an explorer, verify your email, and choose a saved journey or new expedition. For a solo adventure, try:
 
 ```text
 LOOK
@@ -64,12 +72,16 @@ python pyramid2000.py
 | --- | --- |
 | [Player guide](docs/Player-Guide.md) | Commands, inventory, maps, scoring and achievements |
 | [Shared expeditions](docs/Multiplayer.md) | Invitations, shared worlds and exchanging discoveries |
+| [Adventure designer](docs/Adventure-Designer.md) | Guided authoring, state previews, readable items and JSON export |
 | [Content packs and portals](docs/Modding.md) | Building additional adventures in JSON |
 | [HTTP API](docs/API.md) | Sessions, commands and integration endpoints |
 | [Accounts and email](docs/Accounts-and-Email.md) | Recovery, notifications and administration |
+| [Administration](docs/Administration.md) | Explorer management, adventure resets and portable backups |
 | [Development](docs/Development.md) | Project layout, builds and tests |
 | [Deployment](docs/Deployment.md) | IIS, Linux/nginx, backups and recovery |
 | [Developer walkthrough — spoilers](docs/Developer-Walkthrough.md) | Campaign solutions and acceptance checks |
+| [Oasis walkthrough — spoilers](docs/Oasis-Walkthrough.md) | Second adventure solutions and acceptance checks |
+| [Changelog](CHANGELOG.md) | Changes through v1.4.1 |
 
 The same guides are available in the [GitHub wiki](https://github.com/digitalrcs/PyramidGame/wiki). Markdown sources are kept in `docs/` and `wiki/` so documentation changes can be reviewed alongside the code.
 
@@ -94,6 +106,8 @@ The web edition uses ASP.NET Core 10, React 19, Vite and SQLite. It supports dep
 ```sh
 dotnet run --project Pyramid.Tests -c Release
 python -m unittest test_pyramid2000.py
+node Pyramid.Web/Client/src/mapLayout.test.mjs
+node Pyramid.Web/Client/src/roomChimeEvents.test.mjs
 ```
 
 HTTP checks run against a separate local test instance; see the [development guide](docs/Development.md). Never run account-creation or mutation tests against a public game.

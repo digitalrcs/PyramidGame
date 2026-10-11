@@ -2,32 +2,194 @@
   "schemaVersion": 1,
   "id": "oasis-moon-addon",
   "extends": "oasis-of-stars",
-  "name": "The Moon Realm extension",
+  "name": "The Moon and Dawn Realms",
+  "readableItems": {
+    "star chart": "Numbered from left to right, the rising stars awaken in this order: 3, 1, 2. At the observatory, SET STARS THREE ONE TWO. Carry this chart there."
+  },
   "levels": [
     {
       "number": 2,
       "name": "The Moon Realm",
-      "objective": "Restore the moon's voice, then return through the portal.",
+      "objective": "Restore the moon voice, align its stars, and recover the moon shard.",
       "start": "landing",
       "rooms": {
         "landing": {
           "name": "Moonlit landing",
-          "description": "A silver desert stretches east. The western portal returns to the oasis.",
+          "description": "A silver desert stretches east toward the temple. North lie glass dunes. The western portal returns to the oasis.",
           "exits": {
-            "east": "temple"
+            "east": "temple",
+            "north": "dunes"
           },
+          "items": [],
+          "features": {},
           "image": "room-art/room21.png"
         },
         "temple": {
           "name": "Temple of the Moon",
-          "description": "A silver bell hangs in silence. Its inscription asks you to RING BELL.",
+          "description": "A silver bell hangs in silence. Its inscription asks you to RING BELL. Passages lead east to mirrors, north to an archive, and south to a broken bridge.",
           "exits": {
-            "west": "landing"
+            "west": "landing",
+            "east": "mirrorhall",
+            "north": "archive",
+            "south": "bridge"
           },
+          "items": [],
           "features": {
-            "bell": "No tool is needed. The bell waits for a human hand."
+            "bell": "The inscription records the rite: RING BELL. No tool is needed. Its voice wakes the bridge anchors."
           },
-          "image": "room-art/room33.png"
+          "image": "room-art/room33.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "moon-awake"
+              ],
+              "description": "The silver bell sings over the desert. Passages lead east to mirrors, north to an archive, and south to the bridge."
+            },
+            {
+              "requires": [
+                "moon-awake",
+                "bridge-mended"
+              ],
+              "description": "The silver bell sings over the desert. Passages lead east to mirrors, north to an archive, and south to the repaired bridge.",
+              "features": {
+                "bell": "The bell now sings over the desert. Its voice has awakened the bridge anchors."
+              }
+            }
+          ]
+        },
+        "dunes": {
+          "name": "Glass dunes",
+          "description": "Glass fragments glitter in the silver sand. A weathered stele faces the silent horizon. The landing is south.",
+          "exits": {
+            "south": "landing"
+          },
+          "items": [
+            "hand mirror"
+          ],
+          "features": {
+            "stele": "The dawn crown has three sockets, left to right: RIVER, GRAVE, SKY. The river guardian stands before the grave guardian; the sky guardian comes last."
+          },
+          "image": "room-art/room22.png"
+        },
+        "mirrorhall": {
+          "name": "Hall of reflected moons",
+          "description": "An empty bracket interrupts a ring of mirrors. The temple lies west; the observatory is east behind a shutter. Letters read ALIGN MIRRORS.",
+          "exits": {
+            "west": "temple",
+            "east": "observatory"
+          },
+          "items": [],
+          "features": {
+            "bracket": "Carry the hand mirror from the glass dunes and ALIGN MIRRORS. The reflected beam releases the eastern shutter."
+          },
+          "image": "room-art/room27.png",
+          "requires": {
+            "east": "mirrors-aligned"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "mirrors-aligned"
+              ],
+              "description": "The mirror mechanism holds its alignment. The eastern shutter stands open to the observatory. The temple lies west.",
+              "features": {
+                "bracket": "The mirror alignment is settled. The observatory shutter stays open."
+              }
+            }
+          ]
+        },
+        "observatory": {
+          "name": "Observatory of three stars",
+          "description": "Three movable stars hang over a sealed northern arch of dawn. A chart socket labels them with numbers. The mirror hall lies west.",
+          "exits": {
+            "west": "mirrorhall"
+          },
+          "items": [],
+          "features": {
+            "stars": "SET STARS followed by the three numbers on the star chart, in its written order. Carry the chart from the archive. The portal will open north."
+          },
+          "image": "room-art/room29.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "stars-aligned"
+              ],
+              "description": "Three stars shine in their settled order. The northern portal opens onto the unwritten dawn. The mirror hall lies west.",
+              "features": {
+                "stars": "The stars are aligned three, one, two. The northern portal remains open."
+              }
+            }
+          ]
+        },
+        "archive": {
+          "name": "Archive of remembered light",
+          "description": "Stone shelves preserve the archive records. A scroll explains the dawn riddles. The temple lies south.",
+          "exits": {
+            "south": "temple"
+          },
+          "items": [
+            "star chart",
+            "cedar plank"
+          ],
+          "features": {
+            "chart": "Numbered from left to right, the rising stars awaken in this order: 3, 1, 2. At the observatory, SET STARS THREE ONE TWO. Carry this chart there.",
+            "scroll": "The ibis guards the river. The jackal guards the grave. The falcon guards the sky. At the dawn crown, SET CROWN followed by those guardian names in socket order.",
+            "memory": "The dawn asks: What light reaches a traveler after its distant fire has died? The answer is STARLIGHT. SPEAK STARLIGHT in the chamber of memory."
+          },
+          "image": "room-art/room31.png"
+        },
+        "bridge": {
+          "name": "Broken silver bridge",
+          "description": "A short gap separates this bank from an eastern vault. Bell-shaped anchors sleep beside the gap. A sign reads LAY PLANK AFTER THE MOON SINGS.",
+          "exits": {
+            "north": "temple",
+            "east": "vault"
+          },
+          "items": [],
+          "features": {
+            "anchors": "RING BELL in the temple, then carry the archive cedar plank here and LAY PLANK."
+          },
+          "image": "room-art/room34.png",
+          "requires": {
+            "east": "bridge-mended"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "moon-awake"
+              ],
+              "description": "The bell-shaped anchors sing, ready to steady a crossing. A short gap remains before the eastern vault. The temple is north."
+            },
+            {
+              "requires": [
+                "bridge-mended"
+              ],
+              "description": "The bridge mechanism holds a firm crossing to the eastern vault. The singing anchors are settled. The temple is north.",
+              "features": {
+                "anchors": "The awakened anchors hold the crossing open."
+              }
+            }
+          ],
+          "exitKinds": {
+            "east": "bridge"
+          }
+        },
+        "vault": {
+          "name": "Vault of the moon shard",
+          "description": "A silver cushion rests inside a carved alcove. The repaired bridge lies west. A carving shows a wind organ with a missing reed.",
+          "exits": {
+            "west": "bridge"
+          },
+          "items": [
+            "moon shard"
+          ],
+          "features": {
+            "carving": "The carving records: In the dawn, the water seal will STILL WIND. Then the moon shard will TUNE ORGAN. Carry both gifts beyond the northern observatory portal."
+          },
+          "image": "room-art/room36.png",
+          "exitKinds": {
+            "west": "bridge"
+          }
         }
       },
       "puzzles": [
@@ -39,14 +201,307 @@
           "flag": "moon-awake",
           "response": "Silver notes cross the desert. The moon remembers its voice.",
           "hints": [
-            "Read the bell's inscription.",
-            "The bell needs no tool.",
+            "Read the bell inscription; no tool is needed.",
+            "Carry the named tools and prepare earlier mechanisms.",
             "RING BELL."
+          ]
+        },
+        {
+          "room": "mirrorhall",
+          "command": "align mirrors",
+          "needs": [
+            "hand mirror"
+          ],
+          "requires": [],
+          "flag": "mirrors-aligned",
+          "response": "The hand mirror completes the ring. A beam lifts the eastern shutter.",
+          "hints": [
+            "Find the missing mirror among the northern dunes.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "ALIGN MIRRORS."
+          ]
+        },
+        {
+          "room": "observatory",
+          "command": "set stars three one two",
+          "needs": [
+            "star chart"
+          ],
+          "requires": [
+            "mirrors-aligned"
+          ],
+          "flag": "stars-aligned",
+          "response": "Three stars rise in sequence. A portal to the dawn opens north.",
+          "hints": [
+            "EXAMINE CHART in the archive.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "SET STARS THREE ONE TWO."
+          ]
+        },
+        {
+          "room": "bridge",
+          "command": "lay plank",
+          "needs": [
+            "cedar plank"
+          ],
+          "requires": [
+            "moon-awake"
+          ],
+          "flag": "bridge-mended",
+          "response": "The singing anchors hold the plank. You may cross east.",
+          "hints": [
+            "Bring the archive plank after ringing the temple bell.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "LAY PLANK."
           ]
         }
       ],
       "winFlags": [
-        "moon-awake"
+        "moon-awake",
+        "stars-aligned",
+        "bridge-mended"
+      ]
+    },
+    {
+      "number": 3,
+      "name": "The Unwritten Dawn",
+      "objective": "Give the dawn breath, memory, and a just ruler. Return light to the oasis.",
+      "start": "dawnlanding",
+      "rooms": {
+        "dawnlanding": {
+          "name": "Threshold of the unwritten dawn",
+          "description": "A pale horizon hangs motionless. North howls a wind chamber; east waits a chamber of memory. The western portal returns to the moon observatory.",
+          "exits": {
+            "north": "wind",
+            "east": "memory"
+          },
+          "items": [],
+          "features": {
+            "threshold": "Breath and memory must both return before the dawn will accept its crown. The old realms remain reachable if you forgot a gift."
+          },
+          "image": "room-art/room41.png"
+        },
+        "wind": {
+          "name": "Chamber of captive winds",
+          "description": "A dry organ shrieks beside an empty water basin. A door east leads to a garden. Instructions read STILL WIND, THEN TUNE ORGAN.",
+          "exits": {
+            "south": "dawnlanding",
+            "east": "garden"
+          },
+          "items": [],
+          "features": {
+            "basin": "Carry the water seal from the living spring and STILL WIND. Then carry the moon shard and TUNE ORGAN. The restored voice opens the eastern garden."
+          },
+          "image": "room-art/room44.png",
+          "requires": {
+            "east": "voice-restored"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "wind-stilled"
+              ],
+              "description": "Cool water quiets the captive winds. The silent organ awaits its voice. Instructions read TUNE ORGAN. The garden door is east; the threshold is south."
+            },
+            {
+              "requires": [
+                "voice-restored"
+              ],
+              "description": "The organ sings with a clear voice over the quiet basin. The eastern garden door stands open; the threshold is south.",
+              "features": {
+                "basin": "The water seal has quieted the winds. The tuned organ now sings."
+              }
+            }
+          ]
+        },
+        "memory": {
+          "name": "Chamber of distant memory",
+          "description": "A stone face asks: What light reaches a traveler after its distant fire has died? SPEAK your answer. West lies the threshold; east is a sealed tribunal.",
+          "exits": {
+            "west": "dawnlanding",
+            "east": "tribunal"
+          },
+          "items": [],
+          "features": {
+            "face": "The moon archive records the answer. SPEAK followed by that single word to release the eastern passage."
+          },
+          "image": "room-art/room46.png",
+          "requires": {
+            "east": "memory-restored"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "memory-restored"
+              ],
+              "description": "The stone face remembers the light of distant stars. The eastern tribunal passage stands open. West lies the threshold.",
+              "features": {
+                "face": "The face remembers starlight. Its eastern passage is open."
+              }
+            }
+          ]
+        },
+        "garden": {
+          "name": "Garden before sunrise",
+          "description": "A sleeping lotus rises from a still pool. The wind chamber is west; a tribunal lies south. An inscription describes a ruler last tested by thirst.",
+          "exits": {
+            "west": "wind",
+            "south": "tribunal"
+          },
+          "items": [
+            "dawn feather"
+          ],
+          "features": {
+            "inscription": "The feather gives the crown its weight. Carry it to the tribunal. Beyond the crown, a stranger and a gilded idol both thirst. A ruler restores life before accepting glory."
+          },
+          "image": "room-art/room48.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "dawn-returned"
+              ],
+              "description": "The lotus opens in the sunrise. The wind chamber is west; a tribunal lies south. The inscription remembers the ruler who chose to preserve life."
+            }
+          ]
+        },
+        "tribunal": {
+          "name": "Tribunal of three guardians",
+          "description": "A crown has three sockets marked RIVER, GRAVE, SKY from left to right. The northern door waits on a correct crown. The chamber of memory is west; the garden is east.",
+          "exits": {
+            "west": "memory",
+            "east": "garden",
+            "north": "sanctum"
+          },
+          "items": [],
+          "features": {
+            "crown": "Carry the dawn feather. SET CROWN followed by three guardian names in socket order. The glass dunes name the order; the moon archive names each guardian. Both breath and memory must already be restored."
+          },
+          "image": "room-art/room53.png",
+          "requires": {
+            "north": "crown-aligned"
+          },
+          "descriptionStates": [
+            {
+              "requires": [
+                "crown-aligned"
+              ],
+              "description": "The ibis, jackal, and falcon stand in their appointed sockets. The northern sanctum door is open. The chamber of memory is west; the garden is east.",
+              "features": {
+                "crown": "Ibis, jackal, falcon: the crown is correctly ordered and the northern door is open."
+              }
+            }
+          ]
+        },
+        "sanctum": {
+          "name": "Sanctum of the first sunrise",
+          "description": "A thirsty stranger kneels beside a gilded idol. Two bowls read STRANGER and IDOL. The crown asks you to OFFER WATER TO your chosen recipient. The tribunal is south.",
+          "exits": {
+            "south": "tribunal"
+          },
+          "items": [],
+          "features": {
+            "bowls": "The garden inscription describes a just ruler. The living stranger needs water; the idol only reflects glory. Carry the water seal, moon shard, and dawn feather together to make the final offering."
+          },
+          "image": "room-art/room59.png",
+          "descriptionStates": [
+            {
+              "requires": [
+                "dawn-returned"
+              ],
+              "description": "The stranger drinks beside the fallen idol. Sunrise fills the sanctum, and the oasis blooms beneath a sky of living stars. The tribunal is south; your journey is complete.",
+              "features": {
+                "bowls": "Water was offered to the stranger. The idol has fallen and dawn has returned."
+              }
+            }
+          ]
+        }
+      },
+      "puzzles": [
+        {
+          "room": "wind",
+          "command": "still wind",
+          "needs": [
+            "water seal"
+          ],
+          "requires": [],
+          "flag": "wind-stilled",
+          "response": "The water seal cools the basin. The captive winds grow quiet.",
+          "hints": [
+            "Restore the oasis spring and bring its water seal.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "STILL WIND."
+          ]
+        },
+        {
+          "room": "wind",
+          "command": "tune organ",
+          "needs": [
+            "moon shard"
+          ],
+          "requires": [
+            "wind-stilled"
+          ],
+          "flag": "voice-restored",
+          "response": "The moon shard sounds a pure note. The dawn breathes; the eastern garden opens.",
+          "hints": [
+            "Still the wind, then use the moon shard from the lunar vault.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "TUNE ORGAN."
+          ]
+        },
+        {
+          "room": "memory",
+          "command": "speak starlight",
+          "needs": [],
+          "requires": [],
+          "flag": "memory-restored",
+          "response": "The face remembers the light of long-dead stars. The eastern door opens.",
+          "hints": [
+            "EXAMINE MEMORY in the moon archive.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "SPEAK STARLIGHT."
+          ]
+        },
+        {
+          "room": "tribunal",
+          "command": "set crown ibis jackal falcon",
+          "needs": [
+            "dawn feather"
+          ],
+          "requires": [
+            "voice-restored",
+            "memory-restored"
+          ],
+          "flag": "crown-aligned",
+          "response": "River, grave, sky: the guardians take their places. The northern sanctum opens.",
+          "hints": [
+            "Combine the crown socket order with the moon archive guardian names.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "SET CROWN IBIS JACKAL FALCON."
+          ]
+        },
+        {
+          "room": "sanctum",
+          "command": "offer water to stranger",
+          "needs": [
+            "water seal",
+            "moon shard",
+            "dawn feather"
+          ],
+          "requires": [
+            "crown-aligned"
+          ],
+          "flag": "dawn-returned",
+          "response": "You give the stranger water. The gilded idol crumbles; behind it the first sun rises. The oasis blooms beneath a sky of living stars. THE OASIS OF STARS IS COMPLETE. Your expedition may remain to explore and share what it learned.",
+          "hints": [
+            "The garden inscription says a ruler restores life before accepting glory.",
+            "Carry the named tools and prepare earlier mechanisms.",
+            "OFFER WATER TO STRANGER."
+          ]
+        }
+      ],
+      "winFlags": [
+        "dawn-returned"
       ]
     }
   ],
@@ -67,6 +522,23 @@
       "toLevel": 1,
       "toRoom": "arch",
       "description": "The western portal shows the familiar oasis."
+    },
+    {
+      "fromLevel": 2,
+      "fromRoom": "observatory",
+      "direction": "north",
+      "toLevel": 3,
+      "toRoom": "dawnlanding",
+      "requires": "stars-aligned",
+      "description": "A pale portal waits beneath the three stars."
+    },
+    {
+      "fromLevel": 3,
+      "fromRoom": "dawnlanding",
+      "direction": "west",
+      "toLevel": 2,
+      "toRoom": "observatory",
+      "description": "The western portal returns to the moon observatory."
     }
   ]
 }

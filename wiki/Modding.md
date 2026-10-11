@@ -11,7 +11,7 @@ Included working examples (in the source and server publish package):
 
 ```text
 ContentPacks/oasis-of-stars.json     - standalone adventure
-ContentPacks/oasis-moon-addon.json   - adds a realm and two-way portal
+ContentPacks/oasis-moon-addon.json   - adds the Moon and Dawn realms and return portals
 ```
 
 Root fields:
@@ -23,6 +23,7 @@ name: display name, up to 100 characters
 startLevel: stable positive level number (default 1)
 extends: optional base pack ID; used only by addon files
 levels: array of realm definitions
+readableItems: optional item-name-to-text dictionary
 portals: array of directional realm connections
 ```
 
@@ -38,7 +39,8 @@ Room fields:
 ```text
 name, description, lit (default true), exits ({"west":"room-id"}),
 requires ({"west":"flag"}), items (["bronze key"]),
-features ({"inscription":"Descriptive text"}), image (optional).
+features ({"inscription":"Descriptive text"}), image (optional),
+descriptionStates (optional ordered rules), exitKinds (optional route labels).
 ```
 
 Image may reference room-art/room1.png through room-art/room60.png, or
@@ -99,3 +101,49 @@ Limits: 1 MiB per file, 100 realms/pack, 100 rooms/realm, 100 puzzles/realm,
 6. Test an existing save before distributing an update. Include the exact content version in server backups.
 
 The included base adventure is `Pyramid.Web/ContentPacks/oasis-of-stars.json`; `oasis-moon-addon.json` demonstrates a separate extension with a two-way portal. See the [developer walkthrough](Developer-Walkthrough) for its solution and [deployment guide](Deployment) for private content storage.
+
+An adventure is won when every realm with nonempty winFlags has all its flags set. Realms with empty winFlags are exploration areas. Completion records a finish time and the standard victory bonus once; players may continue exploring. The expanded Oasis of Stars is a complete three-realm example. See [its developer walkthrough](Oasis-Walkthrough) for the full solution.
+
+## Descriptions that follow game state
+
+Room `description` remains the default. Optional `descriptionStates` is an ordered array of up to 40 rules. All conditions on a rule must match. The **last matching rule** supplies the replacement description. Rules read current realm puzzle flags and current-room loose items; an item held by any player is absent from the room. Returning or dropping an item updates the next LOOK automatically. Rules do not change saves, award points, consume items, or execute scripts.
+
+```json
+"descriptionStates": [
+  {
+    "presentItems": ["bronze key"],
+    "absentFlags": ["portal-open"],
+    "description": "A bronze key rests beside the closed arch."
+  },
+  {
+    "absentItems": ["bronze key"],
+    "absentFlags": ["portal-open"],
+    "description": "The arch is closed. The key is no longer here."
+  },
+  {
+    "requires": ["portal-open"],
+    "description": "Starlight shines through the open arch.",
+    "features": {"inscription": "The lock is settled; the eastern portal stays open."}
+  }
+]
+```
+
+Each rule requires nonempty `description` text (up to 2,000 characters). The four condition arrays default to empty: `requires` means all listed puzzle flags must be set; `absentFlags` means none may be set; `presentItems` means every named object must be loose in this room; `absentItems` means none may be loose here. An empty set of conditions always matches. Put more specific rules later. Flag references must exist in this realm. Item names use the normal lowercase item syntax and may include objects carried in from other rooms. A condition cannot require and exclude the same flag or object.
+
+Optional rule `features` overrides matching EXAMINE/READ text by feature name. Matching overrides merge over the room's permanent `features` in rule order; the last matching override of each key wins. Other feature text remains unchanged. Up to 40 features are allowed per rule, with the same names and text limits as permanent features. EXAMINE of an unknown feature falls back to the current conditional room description.
+
+Prefer neutral base descriptions for shelves, cushions and pedestals. The live `You see:` line already lists available objects. Avoid writing that an object is present in permanent prose unless a `presentItems` condition controls it. Likewise, give solved mechanisms a flag-based description and feature override so an open grate is not still described as locked.
+
+Older packs can omit `descriptionStates` entirely. The rules are recalculated from saved flags and room contents, including shared expedition state; no save migration is needed.
+
+## Passage kinds for maps
+
+A room may add an `exitKinds` object. Keys must match its existing exits; values are `passage`, `stairs`, `ladder`, `hole`, or `bridge`. For example, `"exitKinds": {"down":"stairs"}` marks an existing downward exit as a stairway. Describe both ends consistently, such as stairs down from the well and stairs up from the cistern. This metadata labels the map connection without changing direction, access requirements, or movement. Older rooms may omit it.
+
+## Readable items
+
+A complete pack or add-on can define `readableItems`, a dictionary from exact item names to plain text (up to 100 entries, 2000 characters each). For example: `"readableItems": {"papyrus scroll": "The river remembers the moon."}`. Place the corresponding item in a room's `items` list. READ requires the object to be carried or visible in the current room; unique short names work. The text is copied once into that player's journal. Repeated reading does not add duplicate notes; a full 100-entry journal still displays the writing. EXAMINE suggests READ. Add-ons cannot redefine a readable item already defined by the parent. The designer's Readables tab authors this dictionary.
+
+A readable object's text belongs to its adventure, not to a global item dictionary. The bundled Moon extension assigns its existing star-chart clue to `readableItems["star chart"]`; Chamber of the Gods supplies its separate built-in chart and lapis-tablet writing. READ first resolves an accessible item. If no item matches, a mod can answer from a current-room feature with that name. Use distinct names when portable writing and fixed scenery should remain easy to tell apart. Named READ/EXAMINE feature overrides follow the matching room-state rules.
+
+Built-in action synonyms such as FEED BIRD are not injected into custom puzzles. Author the command stated in your clue. Players can use a unique shortened name for READ, but ordinary mod GET/DROP commands still use the exact item names.

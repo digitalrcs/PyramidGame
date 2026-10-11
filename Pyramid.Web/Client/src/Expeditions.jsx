@@ -26,6 +26,7 @@ export default function Expeditions({party,user,onClose,onChange,initialId=''}) 
   const ref=useRef(),working=useRef(false),refreshVersion=useRef(0);
   const [lobby,setLobby]=useState(null),[explorers,setExplorers]=useState([]),[selectedId,setSelectedId]=useState(initialId);
   const [error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false);
+  const [chosenPack,setChosenPack]=useState('pyramid');
   async function refresh() {
     const version=++refreshVersion.current;
     const [worlds,people]=await Promise.all([request('expeditions'),request('explorers')]);
@@ -65,7 +66,7 @@ export default function Expeditions({party,user,onClose,onChange,initialId=''}) 
   }
   const selected=lobby?.games.find(g=>g.id===selectedId);
   return <dialog ref={ref} onCancel={onClose} className="journal expeditions" aria-labelledby="expeditions-title" aria-busy={busy}>
-    <div className="rail-heading"><h2 id="expeditions-title">Expeditions</h2><button onClick={onClose} autoFocus aria-label="Close expeditions">CLOSE</button></div>
+    <div className="rail-heading"><h2 id="expeditions-title">Adventures & expeditions</h2><button onClick={onClose} autoFocus aria-label="Close expeditions">CLOSE</button></div>
     {initialId&&lobby&&!lobby.games.some(g=>g.id===initialId)&&<p className="expedition-notice" role="status">This invitation is unavailable for this account. It may have expired or been withdrawn. Sign in with the invited explorer account.</p>}<p>Keep your original solo journey, or host a new world for up to eight explorers. Open expeditions still require the host's approval.</p>
     {error&&<p className="error" role="alert">{error}</p>}{notice&&<p className="expedition-notice" role="status">{notice}</p>}
     <button disabled={busy||!lobby?.active} onClick={()=>action('','solo')}>RETURN TO ORIGINAL SOLO SAVE</button>
@@ -83,6 +84,6 @@ export default function Expeditions({party,user,onClose,onChange,initialId=''}) 
       {Object.entries(party.requests||{}).map(([id,name])=><div className="join-request" key={id}><p>{name} requests to join.</p><div className="expedition-actions"><button disabled={busy} onClick={()=>action(party.id,'approve',id)}>APPROVE</button><button disabled={busy} onClick={()=>action(party.id,'deny',id)}>DENY</button></div></div>)}
       {Object.entries(party.invitations||{}).map(([id,name])=><p key={id}>Invitation pending: {name} <button disabled={busy} onClick={()=>action(party.id,'revoke',id)}>REVOKE</button></p>)}
     </>}</section>}
-    <form onSubmit={create}><h3>Begin a new world</h3><label>Expedition name<input name="name" required maxLength={60} disabled={busy}/></label><label>Adventure<select name="pack" disabled={busy}>{lobby?.packs.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label><InvitePicker prefix="setup" explorers={explorers} disabled={busy} optional/><label className="check-label"><input type="checkbox" name="open" disabled={busy}/> Accept join requests</label><p className="muted invite-note">You can begin immediately. Companions can join later, and your original solo save stays available.</p><button disabled={busy||!lobby||!lobby.packs.length} className="primary">CREATE EXPEDITION</button></form>
+    <form onSubmit={create}><h3>Choose your next adventure</h3><p>Each new expedition has its own saved progress. Play alone, or invite companions whenever you are ready.</p><fieldset className="adventure-choices"><legend>Adventure</legend>{lobby?.packs.map(p=><label className={`adventure-choice ${chosenPack===p.id?'chosen':''}`} key={p.id}><input type="radio" name="pack" value={p.id} checked={chosenPack===p.id} onChange={()=>setChosenPack(p.id)} disabled={busy}/><span><strong>{p.name}</strong><small>{p.levels} realms · {p.rooms} rooms</small><span>{p.summary}</span></span></label>)}</fieldset><label>Expedition name<input name="name" required maxLength={60} defaultValue="My expedition" disabled={busy}/></label><InvitePicker prefix="setup" explorers={explorers} disabled={busy} optional/><label className="check-label"><input type="checkbox" name="open" disabled={busy}/> Accept join requests</label><p className="muted invite-note">You can begin immediately. Companions can join later, and your original solo save stays available. Resume a saved world above to continue instead of starting again.</p><button disabled={busy||!lobby||!lobby.packs.some(p=>p.id===chosenPack)} className="primary">START ADVENTURE</button></form>
   </dialog>;
 }

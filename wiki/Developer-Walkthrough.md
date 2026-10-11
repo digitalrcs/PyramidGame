@@ -760,10 +760,12 @@ WEST
 
 Expected sequence: Dry well -> Caravan camp -> Portal arch -> Moonlit
 landing -> Temple of the Moon -> Moonlit landing -> Portal arch. TURN KEY
-opens the east portal; RING BELL completes The Moon Realm. Returning keeps
+opens the east portal; RING BELL restores the moon voice but does not complete the expanded realm or adventure. Returning keeps
 the key removed from the well and the portal unlocked. Personal visited
 history survives going between realms. In co-op, another player can stay
 in the oasis while you enter the moon realm; it is not a group ascent.
+
+For the complete 22-room, three-realm adventure and its 13 puzzles, follow [The Oasis of Stars walkthrough](Oasis-Walkthrough). The short route above tests portal compatibility only.
 
 ## To author an extension
 
@@ -809,3 +811,14 @@ Reserve engine commands including MAP and CLEAR. Puzzle commands do not
 consume tools automatically. See the modding guide for full fields,
 limits and image restrictions. This walkthrough does not replace the schema.
 
+## Version 1.4.1 acceptance checks
+
+Use disposable local expeditions for these checks; preserve production users and saves.
+
+- Confirm FEED BIRD, CLEAN MIRROR and LAY BOARD perform their built-in canonical actions only when normal object and prerequisite requirements are met. Repeating a solved action must not award points again.
+- In the Drowned Archive, READ LAPIS TABLET while the relic is visible or carried. Confirm the writing is shown and copied once. In that level's study, READ TABLET must still give the fixed study clue; READ LAPIS TABLET must give the collectible's separate writing. A remote or deposited relic is not readable.
+- Read an accessible star chart twice. Confirm one journal entry and no reading points. Test ambiguous item names and a full 100-entry journal; both must explain what happened without losing existing notes.
+- Pick up and drop an object, then LOOK. Check the live object list and matching item-dependent descriptions. Solve a mechanism and verify its current LOOK and EXAMINE descriptions; old transcript entries should remain unchanged.
+- In an authored test pack, use up/down exits with stairs or ladders and a one-way hole. Visit both ends and open MAP. Check floor selection, arrow direction and route labels. Unvisited rooms must stay hidden; switching floors/views must not charge another map fee.
+- Check room activity, an arriving companion, positive points, a solved puzzle and final victory sounds. A combined event should play one prioritized cue. CHIMES OFF must mute all cues, and switching accounts/adventures must not sound like a newly earned victory.
+- Export and reimport a designer pack containing descriptionStates, feature overrides, exitKinds and readableItems. Compare the resulting fields, restart a development server with the pack, and test both new and existing saved expeditions.

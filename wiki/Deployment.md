@@ -74,7 +74,7 @@ Back up the SQLite database, Data Protection keys, exact content packs, custom m
 
 For a simple consistent backup, stop only the game service or application pool, copy the complete private data directory and matching content/configuration, then restart. For an online backup, use SQLite's backup API. Copying an active `.db` alone can omit committed WAL data.
 
-Test restoration into a separate private directory and instance, with mail disabled and registration closed. Confirm database integrity, expected account/progress records and application startup. Do not send old queued messages during a restore test. Confirm key portability before moving between machines or operating systems.
+Test restoration into a separate private directory and instance, isolated from outbound mail and public traffic. Saved dashboard settings override environment defaults, so environment variables alone may not disable restored SMTP or registration. Keep the test host isolated until its runtime settings have been reviewed. Confirm database integrity, expected account/progress records and application startup. Do not send old queued messages during a restore test. Confirm key portability before moving between machines or operating systems.
 
 During an upgrade, retain external data and keys, back up first, replace the release, restart, then verify. A code rollback may also need its matching database/content backup if a migration changed their format. Do not delete the previous release or backup until the new version is verified.
 
@@ -92,3 +92,19 @@ During an upgrade, retain external data and keys, back up first, replace the rel
 - Remove disposable verification accounts after testing and confirm backup restoration.
 
 A subfolder shares its browser origin with the parent website. Keep that site trusted and maintained. This architecture is not a web farm: horizontal scaling needs coordinated rate limits and a suitable shared persistence design.
+
+## Portable gameplay backup and import
+
+The [administration dashboard](Administration) can export accounts and gameplay as private JSON and restore them on a compatible installation. Keep installed content packs alongside these exports. The export does not include SMTP/settings, Data Protection keys, content files, sessions, recovery tokens or queued email; continue taking complete host backups as described above.
+
+The import form accepts a JSON file up to 20 MiB and wraps it in a request object. Reverse proxies and IIS request filtering must allow that body size specifically on `/pyramid/api/admin/backup/import`, including a little allowance for the wrapper. Keep the smaller limit on normal gameplay routes. Follow the supplied deployment templates rather than increasing every endpoint's allowance. Application-level administrator, CSRF, size and snapshot validation still apply.
+
+Before import, the application writes a recovery JSON export beneath the private data directory in `ImportRecovery`. That directory must remain outside the web root, writable by the service and restricted to the application/operator. Include it in retention and disk-capacity planning. Import replaces all accounts and game state and revokes all sessions. If an imported snapshot removes the previous administrator, recovery requires an administrator login from that snapshot or an operator retrieving the pre-import export.
+
+## Upgrade preflight and content preservation
+
+Against a private copy of the database and matching keys, use the new release with its normal protected configuration and `--Pyramid:ValidateOnly true`. This applies schema migrations and validates content/settings without opening a listener or starting the mail worker. It does modify the selected database: point it at the rehearsal copy first. Compare account, adventure and settings records before activating the release. Never substitute an empty development database for production data.
+
+Keep the persistent data path and Data Protection application/key configuration stable across releases. Preserve administrator-installed packs and images, but review and install updated bundled packs from the release as well; blindly copying an entire old ContentPacks directory over the new release can discard new features and fixes. Keep stable pack, realm and room IDs so saved adventures continue to resolve. The browser designer's local drafts are not included in server backups; authors must export them separately.
+
+Complete host backups include the `installation_owner` binding and `site_settings` database records. Portable gameplay exports intentionally exclude both, and cannot transfer or replace GOD ownership. On an owner-bound installation, portable import requires that owner and must preserve its account ID, exact name and active administrator role.

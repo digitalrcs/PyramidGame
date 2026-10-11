@@ -26,8 +26,11 @@ Restart with the same data directory to check persistence. Use separate browser 
 
 | Area | Files |
 | --- | --- |
-| Built-in campaign | `Pyramid.Web/Game/World.cs`, `Engine.cs` |
-| Maps, sound cues and exploration rewards | `Pyramid.Web/Game/Exploration.cs` |
+| Built-in campaign and changing scenery | `Pyramid.Web/Game/World.cs`, `Engine.cs`, `RoomNarrative.cs` |
+| Object names and readable clues | `Pyramid.Web/Game/CommandAliases.cs`, `ReadableItems.cs` |
+| Maps and exploration rewards | `Pyramid.Web/Game/Exploration.cs`, `Client/src/mapLayout.js` |
+| Room sound events | `Pyramid.Web/Client/src/roomChimeEvents.js`, `roomChime.js` |
+| Adventure library and designer | `Pyramid.Web/Client/src/AdventureHub.jsx`, `AdventureEditor.jsx` |
 | Shared-world command rules | `Pyramid.Web/Game/Cooperation.cs` |
 | Persistence and admission | `Pyramid.Web/Storage.cs` and related partial files |
 | JSON adventures | `Pyramid.Web/Game/ContentPacks.cs`, `ModEngine.cs` |
@@ -43,18 +46,19 @@ State changes, authorization, score calculations and map visibility belong on th
 
 ```powershell
 dotnet run --project Pyramid.Tests -c Release
+node Pyramid.Web/Client/src/mapLayout.test.mjs
+node Pyramid.Web/Client/src/roomChimeEvents.test.mjs
+python -m unittest test_pyramid2000.py
 ```
 
-With the isolated server running, use a second terminal:
+GitHub Actions runs the frontend build, both Node checks, the .NET suite, and the classic Python tests. `BUILD-WEB.ps1` builds and publishes the app and runs the .NET suite; run the Node and Python commands above separately when using that helper.
 
-```powershell
-$env:PYRAMID_TEST_BASE = 'http://127.0.0.1:5190/pyramid/'
-python Pyramid.Tests/http_checks.py
-python Pyramid.Tests/http_coop_checks.py
-```
+The Node checks cover known-room filtering, relative floors, one-way and portal routes, and room-event detection without playing audio. The .NET suite covers both adventures, changing room descriptions, shared state, persistence, account verification, permissions, backups, and settings.
 
-The HTTP scripts create accounts and change saves. Account recovery checks additionally need their documented disposable administrator and Capture-mode mail setup; inspect `http_account_checks.py` before running it. Engine/storage account and mail checks run in the .NET test project.
+HTTP integration scripts create accounts and change saves. They are manual fixture tools rather than part of the default CI job. The older `http_checks.py` and `http_coop_checks.py` registration flows predate mandatory email verification; update their setup before using them against the current server. Account recovery checks also need a disposable administrator and Capture-mode mail setup; inspect `http_account_checks.py` before running it.
 
-Browser verification should cover sign-in, guides, room art, expedition invitations, independent movement, consent-based item transfers, refresh/resume, visited-only maps and their cost, CLEAR, and audible chimes. Check both a desktop and a narrow mobile viewport. An error-free console does not establish audible output.
+`http_verification_checks.py` requires a fresh disposable Capture-mode server at `http://127.0.0.1:5198/pyramid/`, an empty database, and a `VERIFICATION-QA.marker` in its data directory. It writes local fixture credentials for subsequent role checks; keep that directory under ignored `artifacts/` and never commit it. `http_role_checks.py` consumes that fixture and also requires its owner binding to be provisioned. Read each script's prerequisites before running it with `--data <isolated-directory>`; do not point these scripts at production.
+
+Browser verification should cover sign-in, guides, room art, expedition invitations, independent movement, consent-based item transfers, refresh/resume, visited-only maps and their cost, CLEAR, and audible chimes. Check that picked-up objects disappear from LOOK, dropped objects appear in their new room, and solved mechanisms describe their current state. Check relative-floor maps, one-way holes, and accessible route labels. Verify distinct room-change, puzzle, and arrival cues with sound enabled; also check muted mode and unchanged polling. Check both a desktop and a narrow mobile viewport. An error-free console does not establish audible output.
 
 The [developer walkthrough](Developer-Walkthrough.md) supplies all campaign solutions and multiplayer checkpoints. The [deployment guide](Deployment.md) covers installation and recovery.

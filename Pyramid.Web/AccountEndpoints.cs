@@ -27,40 +27,41 @@ public static class AccountEndpoints
         var identity=new ClaimsIdentity([new(ClaimTypes.NameIdentifier,account.Id),new(ClaimTypes.Name,account.Name),new("sid",sid)],"Pyramid");
         await c.SignInAsync("Pyramid",new ClaimsPrincipal(identity),new AuthenticationProperties{IsPersistent=false,ExpiresUtc=DateTimeOffset.UtcNow.AddHours(8)});
     }
-    public static void QueueVerification(Storage db,MailDelivery mail,Account account)
+    public static string QueueVerification(Storage db,MailDelivery mail,Account account)
     {
         var address=account.PendingEmail??(!account.EmailVerified?account.Email:null);
-        if(!mail.Enabled||address is null)return;
+        if(!mail.Enabled)return "disabled";
+        if(address is null)return "unavailable";
         lock(MailIssueLock){
         var key=$"verify:{account.Id}:{HashToken(address)}:{DateTimeOffset.UtcNow.ToUnixTimeSeconds()/120}";
-        if(mail.WasQueued(key))return;
+        if(mail.WasQueued(key))return "already-queued";
         var token=Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
-        if(!db.IssueAccountToken(account.Id,"verify",HashToken(token),DateTimeOffset.UtcNow.AddHours(24),expectedEmail:address))return;
-        mail.Queue(account.Id,address,"Verify your Pyramid email",$"Hello {account.Name},\n\nConfirm this email address for your Pyramid explorer account:\n{mail.BuildLink("verify",token)}\n\nThis link expires in 24 hours. Open it and choose Verify email. If you did not request this, ignore this message.\n\nPyramid",key,allowPendingEmail:true);
+        if(!db.IssueAccountToken(account.Id,"verify",HashToken(token),DateTimeOffset.UtcNow.AddHours(24),expectedEmail:address))return "unavailable";
+        return mail.Queue(account.Id,address,"Verify your Pyramid email",$"Hello {account.Name},\n\nConfirm this email address for your Pyramid explorer account:\n{mail.BuildLink("verify",token)}\n\nThis link expires in 24 hours. Open it and choose Verify email. If you did not request this, ignore this message.\n\nPyramid",key,allowPendingEmail:true)?"queued":"disabled";
         }
     }
     public static void MapAccounts(this WebApplication app)
     {
-        var config=app.Configuration;
+        var settings=app.Services.GetRequiredService<SiteSettings>();
         var dummy=app.Services.GetRequiredService<IPasswordHasher<string>>().HashPassword("dummy",Guid.NewGuid().ToString());
         app.MapGet("/api/session",(HttpContext c,Storage db,IAntiforgery csrf,MailDelivery mail)=>{
             var account=c.User.Identity?.IsAuthenticated==true?db.FindById(User(c)):null;
-            return Results.Ok(new{token=csrf.GetAndStoreTokens(c).RequestToken,user=account is null?null:new{id=account.Id,name=account.Name,isAdmin=account.IsAdmin},registration=config.GetValue("Pyramid:AllowRegistration",true),emailEnabled=mail.Enabled});
+            return Results.Ok(new{token=csrf.GetAndStoreTokens(c).RequestToken,user=account is null?null:new{id=account.Id,name=account.Name,isAdmin=account.IsAdmin,isGod=account.IsGod,role=AccountRoles.For(account.IsAdmin,account.IsGod),emailVerified=account.EmailVerified,email=account.Email,pendingEmail=account.PendingEmail,verificationRequired=!account.EmailVerified,canRestoreBackup=db.CanImportBackup(account.Id)},verificationDelivery=account?.EmailVerified==true?"not-required":mail.Enabled?"required":"disabled",registration=settings.AllowRegistration,emailEnabled=mail.Enabled,site=settings.PublicView()});
         });
         app.MapPost("/api/register",async(Registration input,HttpContext c,Storage db,IPasswordHasher<string> hasher,MailDelivery mail)=>{
-            if(!config.GetValue("Pyramid:AllowRegistration",true))return Results.Json(new{error="Registration is closed."},statusCode:403);
+            if(!settings.AllowRegistration)return Results.Json(new{error="Registration is closed."},statusCode:403);
             if(input.Name is null||!Regex.IsMatch(input.Name,"\\A[a-zA-Z0-9_-]{3,24}\\z")||!Password(input.Password)||!ValidEmail(input.Email))return Results.BadRequest(new{error="Enter a valid email, a 3–24 character explorer name (letters, numbers, underscore or dash), and a 12–128 character password."});
             var id=Guid.NewGuid().ToString("N");
             if(!db.Create(id,input.Name,hasher.HashPassword(id,input.Password),input.Email))return Results.BadRequest(new{error="That explorer name or email is unavailable."});
-            var account=db.FindById(id)!;QueueVerification(db,mail,account);db.LoginResult(id,true);await SignIn(c,db,account);
-            return Results.Ok(new{id,name=account.Name,message="Account created. Verify your email to enable email sign-in and recovery."});
+            var account=db.FindById(id)!;var delivery=QueueVerification(db,mail,account);db.LoginResult(id,true);await SignIn(c,db,account);
+            return Results.Ok(new{id,name=account.Name,verificationRequired=true,verificationDelivery=delivery,message=delivery is "queued" or "already-queued"?"Account created. A verification email is queued. Verify your email before entering the pyramid.":"Account created. Email delivery is unavailable. Ask an administrator to approve your email before entering the pyramid."});
         }).RequireRateLimiting("auth");
         app.MapPost("/api/login",async(Login input,HttpContext c,Storage db,IPasswordHasher<string> hasher)=>{
             if(string.IsNullOrWhiteSpace(input.Name)||input.Name.Length>254||!Password(input.Password))return Results.Json(new{error="Sign-in failed. Check your credentials or try again later."},statusCode:401);
-            var account=db.FindLogin(input.Name.Trim());
+            var account=db.FindSignIn(input.Name.Trim());
             var correct=hasher.VerifyHashedPassword(account?.Id??"dummy",account?.Hash??dummy,input.Password)!=PasswordVerificationResult.Failed;
             if(account is null||account.Suspended||account.LockedUntil>DateTimeOffset.UtcNow||!correct){if(account is not null&&(account.LockedUntil is null||account.LockedUntil<=DateTimeOffset.UtcNow))db.LoginResult(account.Id,false);else db.RecordLogin(input.Name,false,account?.Id);return Results.Json(new{error="Sign-in failed. Check your credentials or try again later."},statusCode:401);}
-            db.LoginResult(account.Id,true);await SignIn(c,db,account);return Results.Ok(new{id=account.Id,name=account.Name});
+            db.LoginResult(account.Id,true);await SignIn(c,db,account);return Results.Ok(new{id=account.Id,name=account.Name,verificationRequired=!account.EmailVerified});
         }).RequireRateLimiting("auth");
         app.MapPost("/api/forgot-password",(EmailOnly input,Storage db,MailDelivery mail)=>{
             if(ValidEmail(input.Email)&&mail.Enabled)
@@ -92,7 +93,7 @@ public static class AccountEndpoints
             return Results.Ok(Message("Email verified. You can now sign in with this email and request password resets."));
         }).RequireRateLimiting("auth");
         var accountApi=app.MapGroup("/api/account").RequireAuthorization().RequireRateLimiting("play");
-        accountApi.MapGet("",(HttpContext c,Storage db)=>{var a=db.FindById(User(c))!;return Results.Ok(new{id=a.Id,name=a.Name,email=a.Email,emailVerified=a.EmailVerified,pendingEmail=a.PendingEmail,isAdmin=a.IsAdmin,suspended=a.Suspended,emailNotifications=a.EmailNotifications});});
+        accountApi.MapGet("",(HttpContext c,Storage db)=>{var a=db.FindById(User(c))!;return Results.Ok(new{id=a.Id,name=a.Name,email=a.Email,emailVerified=a.EmailVerified,pendingEmail=a.PendingEmail,isAdmin=a.IsAdmin,isGod=a.IsGod,role=AccountRoles.For(a.IsAdmin,a.IsGod),suspended=a.Suspended,emailNotifications=a.EmailNotifications});});
         accountApi.MapPost("/email",(EmailChange input,HttpContext c,Storage db,IPasswordHasher<string> hasher,MailDelivery mail)=>{
             var a=db.FindById(User(c))!;
             if(!mail.Enabled)return Results.BadRequest(new{error="Email delivery is not configured. Contact the administrator."});
@@ -102,7 +103,7 @@ public static class AccountEndpoints
         }).RequireRateLimiting("auth");
         accountApi.MapPost("/resend-verification",(HttpContext c,Storage db,MailDelivery mail)=>{
             if(!mail.Enabled)return Results.BadRequest(new{error="Email delivery is not configured. Contact the administrator."});
-            QueueVerification(db,mail,db.FindById(User(c))!);return Results.Ok(Message("If an address is awaiting verification, a link has been queued. Please allow two minutes between requests."));
+            var delivery=QueueVerification(db,mail,db.FindById(User(c))!);return Results.Ok(new{verificationDelivery=delivery,message=delivery is "queued" or "already-queued"?"A verification email is queued. Please allow two minutes between requests.":"No address is awaiting verification. Refresh your account details."});
         }).RequireRateLimiting("auth");
         accountApi.MapPost("/notifications",(NotificationPreference input,HttpContext c,Storage db)=>{db.SetEmailNotifications(User(c),input.Enabled);return Results.Ok();});
         var admin=app.MapGroup("/api/admin").RequireAuthorization().RequireRateLimiting("play");
@@ -111,9 +112,11 @@ public static class AccountEndpoints
             var a=db.FindById(User(context.HttpContext));
             return a is {IsAdmin:true,Suspended:false}?await next(context):Results.Json(new{error="Administrator access required."},statusCode:403);
         });
-        admin.MapGet("/users",(HttpContext c,Storage db,MailDelivery mail)=>Results.Ok(new{users=db.AdminUsers(User(c)),audit=db.AdminAudit(User(c)),logins=db.AdminLogins(User(c)),mail=mail.AdminStatus()}));
+        admin.MapGet("/users",(HttpContext c,Storage db,MailDelivery mail)=>Results.Ok(new{users=db.AdminUsers(User(c)),overview=db.AdminOverview(User(c)),expeditions=db.AdminExpeditions(User(c)),audit=db.AdminAudit(User(c)),logins=db.AdminLogins(User(c)),mail=mail.AdminStatus()}));
         admin.MapPost("/action",(AdminActionInput input,HttpContext c,Storage db)=>{
             try{
+                if(input.Action=="reset-expedition"){db.AdminResetExpedition(User(c),input.Target,input.Confirmation);return Results.Ok(Message("Shared expedition restarted for every member."));}
+                if(input.Action is "approve" or "reset-solo"){db.AdminApproveOrReset(User(c),input.Target,input.Action,input.Confirmation,input.ExpectedEmail);return Results.Ok(Message(input.Action=="approve"?"Email approved by administrator.":"Solo adventure restarted. Shared expeditions are unchanged."));}
                 var target=db.FindById(input.Target);
                 if(target is null)return Results.BadRequest(new{error="Explorer no longer exists."});
                 if(input.Action=="delete"&&input.Confirmation!=target.Name)return Results.BadRequest(new{error="Type the exact explorer name to confirm permanent deletion."});
@@ -139,6 +142,6 @@ public static class AccountEndpoints
     public record TokenInput(string Token);
     public record EmailChange(string Email,string Password);
     public record NotificationPreference(bool Enabled);
-    public record AdminActionInput(string Target,string Action,string? Confirmation);
+    public record AdminActionInput(string Target,string Action,string? Confirmation,string? ExpectedEmail=null);
     public record AdminMessage(string Target,string Subject,string Message);
 }

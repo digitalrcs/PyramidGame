@@ -1,6 +1,7 @@
 namespace Pyramid.Web.Game;
 public static class ModEngine
 {
+    public static bool Complete(Expedition s,Realm realm)=>realm.WinFlags.Length>0&&realm.WinFlags.All(flag=>realm.Number==s.Level?s.Flags.Contains(flag):s.Realms.TryGetValue(realm.Number,out var saved)&&saved.Flags.Contains(flag));
     public static Realm Realm(Expedition s)=>ContentPacks.Get(s.PackId).Levels.Single(l=>l.Number==s.Level);
     public static void Store(Expedition s)
     {
@@ -22,11 +23,23 @@ public static class ModEngine
     {
         var content=ContentPacks.Get(pack);var s=new Expedition{PackId=pack,Level=content.StartLevel};s.Room=Realm(s).Start;s.Visited=[s.Room];Restore(s);Look(s);return s;
     }
+    private static IEnumerable<RoomDescriptionState> MatchingDescriptions(Expedition s)
+    {
+        var items=s.Items.GetValueOrDefault(s.Room)??[];
+        return Realm(s).Rooms[s.Room].DescriptionStates.Where(state=>state.Requires.All(s.Flags.Contains)&&!state.AbsentFlags.Any(s.Flags.Contains)&&state.PresentItems.All(items.Contains)&&!state.AbsentItems.Any(items.Contains));
+    }
+    public static string Description(Expedition s)=>MatchingDescriptions(s).LastOrDefault()?.Description??Realm(s).Rooms[s.Room].Description;
+    public static string? Feature(Expedition s,string name)
+    {
+        var text=Realm(s).Rooms[s.Room].Features.GetValueOrDefault(name);
+        foreach(var state in MatchingDescriptions(s))if(state.Features.TryGetValue(name,out var replacement))text=replacement;
+        return text;
+    }
     public static void Look(Expedition s)
     {
         if(!Engine.Lit(s)){Engine.Say(s,"Darkness hides this room. LIGHT LAMP or RETREAT.");return;}
         var room=Realm(s).Rooms[s.Room];var portals=ContentPacks.Get(s.PackId).Portals.Where(p=>p.FromLevel==s.Level&&p.FromRoom==s.Room).ToArray();
-        Engine.Say(s,room.Name+"\n"+room.Description+"\n"+string.Join("\n",portals.Select(p=>$"{p.Description} Direction: {p.Direction}."))+"\nExits: "+string.Join(", ",room.Exits.Keys.Concat(portals.Select(p=>p.Direction)))+".\n"+(s.Items[s.Room].Count>0?"You see: "+string.Join(", ",s.Items[s.Room])+".":"There are no loose objects here."));
+        Engine.Say(s,room.Name+"\n"+Description(s)+"\n"+string.Join("\n",portals.Select(p=>$"{p.Description} Direction: {p.Direction}."))+"\nExits: "+string.Join(", ",room.Exits.Keys.Concat(portals.Select(p=>p.Direction)))+".\n"+(s.Items[s.Room].Count>0?"You see: "+string.Join(", ",s.Items[s.Room])+".":"There are no loose objects here."));
     }
     public static void Execute(Expedition s,string raw)
     {
@@ -36,7 +49,7 @@ public static class ModEngine
         Engine.Say(s,command,"command");s.Actions++;
         void Say(string text)=>Engine.Say(s,text);
         string direction=verb=="go"?noun:verb;direction=direction switch{"n"=>"north","s"=>"south","e"=>"east","w"=>"west","u"=>"up","d"=>"down",_=>direction};
-        if(command is "help" or "?")Say("LOOK | N S E W UP DOWN | GET <item> | DROP <item> | EXAMINE <feature> | INVENTORY | NOTE <text> | JOURNAL | MAP | CLEAR | HINT | RETREAT | LIGHT LAMP. MAP costs 2 points per opening. CLEAR erases only the transcript. Follow descriptions for puzzle commands. Portals lead to other realms; each realm remembers its objects and mechanisms.");
+        if(command is "help" or "?")Say("LOOK | N S E W UP DOWN | GET <item> | DROP <item> | EXAMINE <feature> | READ <item> | INVENTORY | NOTE <text> | JOURNAL | MAP | CLEAR | HINT | RETREAT | LIGHT LAMP. MAP costs 2 points per opening. CLEAR erases only the transcript. Follow descriptions for puzzle commands. Portals lead to other realms; each realm remembers its objects and mechanisms.");
         else if(command is "look" or "l")Look(s);
         else if(command is "inventory" or "i")Say("Carrying: "+string.Join(", ",s.Inventory));
         else if(command=="journal")Say(string.Join("\n",s.Journal));
@@ -64,10 +77,15 @@ public static class ModEngine
             else{s.Items[s.Room].Remove(noun);s.Inventory.Add(noun);Say("Taken: "+noun);}
         }
         else if(verb=="drop") {if(s.Inventory.Remove(noun)){s.Items[s.Room].Add(noun);Say("Dropped: "+noun);}else Say("You do not carry that object.");}
-        else if(verb is "read" or "examine" or "x")
+        else if(verb=="read")
         {
-            if(room.Features.TryGetValue(noun,out var description))Say(description);
-            else Say(room.Description);
+            if(!ReadableItems.TryRead(s,noun))Say(Feature(s,noun)??"You cannot find that readable object here. Try EXAMINE or use its full name.");
+        }
+        else if(verb is "examine" or "x")
+        {
+            if(ReadableItems.TryExamine(s,noun)){}
+            else if(Feature(s,noun) is {} description)Say(description);
+            else Say(Description(s));
         }
         else if(command=="hint")
         {
@@ -85,7 +103,10 @@ public static class ModEngine
             else{s.Flags.Add(puzzle.Flag);s.Solved++;Say(puzzle.Response);s.Achievements.Add($"{realm.Name}: {puzzle.Flag}");}
         }
         if(realm.WinFlags.Length>0&&realm.WinFlags.All(s.Flags.Contains)&&s.Level==realm.Number&&!s.Achievements.Contains(realm.Name+" complete")){s.Achievements.Add(realm.Name+" complete");Say("REALM COMPLETE: "+realm.Name+". You may continue exploring.");}
-        Store(s);s.Revision++;if(s.Transcript.Count>180)s.Transcript.RemoveRange(0,s.Transcript.Count-180);
+        Store(s);
+        var goals=ContentPacks.Get(s.PackId).Levels.Where(l=>l.WinFlags.Length>0).ToArray();
+        if(!s.Won&&goals.Length>0&&goals.All(l=>Complete(s,l))){s.Won=true;s.Finished=DateTimeOffset.UtcNow;Say("ADVENTURE COMPLETE: "+ContentPacks.Get(s.PackId).Name+". Your journey is remembered. You may continue exploring.");}
+        s.Revision++;if(s.Transcript.Count>180)s.Transcript.RemoveRange(0,s.Transcript.Count-180);
     }
 }
 

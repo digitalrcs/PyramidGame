@@ -57,7 +57,18 @@ Check(tasks.Count(x=>x.accepted)==1,"Concurrent commands enforce revision");Chec
 var restored=new Storage(path);Check(restored.Read("a").Inventory.Contains("lamp"),"Database survives service recreation");
 var token=db.NewSession("a");Check(db.ValidSession(token,"a")&&!db.ValidSession(token,"b"),"Session bound to account");db.EndSession(token);Check(!db.ValidSession(token,"a"),"Logout revokes session");
 await CoopChecks.Run(Check);
+OasisChecks.Run(Check);
 ExplorationChecks.Run(Check);
+AliasChecks.Run(Check);
+ModNarrativeChecks.Run(Check);
+RoomSignalChecks.Run(Check);
+ReadableChecks.Run(Check);
+NarrativeChecks.Run(Check);
 AccountChecks.Run(Check);
+AdminChecks.Run(Check);
+RoleChecks.Run(Check);
+VerificationChecks.Run(Check);
+BackupChecks.Run(Check);
 await MailChecks.Run(Check);
+await SettingsChecks.Run(Check);
 Console.WriteLine($"{checks} checks passed. Full campaign: {s.Actions} commands, {s.Moves} moves, {s.Score} points.");

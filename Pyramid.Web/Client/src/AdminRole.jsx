@@ -1,0 +1,10 @@
+import React,{useEffect,useState} from 'react';
+import {request} from './api';
+
+export default function AdminRole({person,user,busy,execute}){
+ const current=person.role||(person.isGod?'god':person.isAdmin?'admin':'explorer');
+ const [roles,setRoles]=useState([]),[role,setRole]=useState(current),[confirmation,setConfirmation]=useState(''),[error,setError]=useState('');
+ useEffect(()=>{let active=true;request('admin/roles').then(data=>{if(active)setRoles(data);}).catch(e=>{if(active)setError(e.message);});return()=>{active=false;};},[]);
+ const own=person.id===user.id,protectedRole=person.isGod||current==='god';
+ return <form className="admin-section" onSubmit={async e=>{e.preventDefault();if(await execute('admin/role',{target:person.id,role,expectedRole:current,confirmation}))setConfirmation('');}}><h3>Permissions</h3><p>Current role: <strong>{protectedRole?'GOD — installation owner':person.isAdmin?'Administrator':'Explorer'}</strong></p><label>Account role<select value={role} disabled={busy||own||protectedRole||!roles.length} onChange={e=>{setRole(e.target.value);setConfirmation('');}}>{roles.filter(r=>r.assignable!==false||r.id===current).map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select></label><p className="muted">{roles.find(r=>r.id===role)?.description}</p>{protectedRole?<p className="muted">GOD is reserved for the installation owner. It cannot be assigned or changed through the admin screen. Future owner-only debugging tools will use this permission.</p>:own?<p className="muted">Another administrator must change your role. The last active administrator cannot be removed.</p>:<><p className="admin-warning">Changing roles ends this explorer’s sessions. Administrator access includes private accounts, settings and full database restoration.</p><label>Type {person.name} to confirm role change<input autoComplete="off" value={confirmation} onChange={e=>setConfirmation(e.target.value)} disabled={busy}/></label><button disabled={busy||!roles.length||role===current||confirmation!==person.name}>CHANGE ROLE</button></>}{error&&<p className="error" role="alert">{error}</p>}</form>;
+}

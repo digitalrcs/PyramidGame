@@ -24,3 +24,5 @@
 .welcome-support a{display:inline-block;padding:8px 0;color:var(--gold);font-size:12px;text-underline-offset:4px;line-height:1.6}
 .welcome-support a:hover{text-decoration-thickness:2px}
 .welcome-support a:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+
+.site-notice{padding:12px 24px;border-bottom:1px solid var(--line);background:#23251c;color:var(--gold);overflow-wrap:anywhere;white-space:pre-wrap}

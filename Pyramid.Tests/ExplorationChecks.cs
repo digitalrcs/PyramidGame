@@ -39,10 +39,10 @@ static class ExplorationChecks
         check(mod.MapSnapshot!.Realm=="oasis-of-stars:2"&&mod.MapSnapshot.Nodes.Length==2&&mod.MapsUsed==1,"Mod MAP uses current realm and charges once");
         Engine.Execute(mod,"west");Engine.Execute(mod,"west");
         check(mod.Level==1&&mod.Visited.SetEquals(new[]{"camp","well","arch"}),"Portal return restores personal visited room history");
-        check(mod.BonusPoints==23,"Room discoveries and complete-realm surveys award personal bonuses");
+        check(mod.BonusPoints==3,"Three discovered Oasis rooms earn bonuses without claiming an incomplete realm survey");
         mod=JsonSerializer.Deserialize<Expedition>(JsonSerializer.Serialize(mod))!;Engine.Execute(mod,"east");
         check(mod.Level==2&&mod.Visited.Contains("temple"),"Visited realm history survives save roundtrip");
-        Engine.Execute(mod,"east");check(mod.BonusPoints==23,"Portal revisits cannot repeat discovery or survey bonuses");
+        Engine.Execute(mod,"east");check(mod.BonusPoints==3,"Portal revisits cannot repeat discovery or survey bonuses");
         Engine.Execute(mod,"clear");check(mod.Transcript.Count==0&&mod.Inventory.Contains("bronze key"),"Mod CLEAR preserves belongings");
         var party=new Party{World=Engine.New()};party.Members["a"]=new(){State=Engine.New()};party.Members["b"]=new(){State=Engine.New()};
         Cooperation.Execute(party,"a","map");Cooperation.Execute(party,"a","clear");

@@ -75,14 +75,15 @@ public static class Engine
         if(s.PackId!="pyramid"){ModEngine.Look(s);return;}
         if(!Lit(s)){Say(s,"DARKNESS HIDES THE PASSAGE. Light your lamp, or RETREAT to the landing; there is no need to lose your expedition.");return;}
         var room=Current(s).Rooms[s.Room];
-        Say(s,room.Name+"\n"+room.Description+"\nExits: "+string.Join(", ",room.Exits.Keys)+".\n"+(s.Items[s.Room].Count>0?"You see: "+string.Join(", ",s.Items[s.Room])+".":"There are no loose objects here."));
-        if(s.Flags.Count>0) Say(s,"Opened routes: "+string.Join(", ",new[]{("west-open","western shrine"),("east-open","eastern shrine"),("north-open","gallery crossing")}.Where(x=>s.Flags.Contains(x.Item1)).Select(x=>x.Item2))+".");
+        Say(s,room.Name+"\n"+RoomNarrative.Describe(s)+"\nExits: "+string.Join(", ",room.Exits.Keys)+".\n"+(s.Items[s.Room].Count>0?"You see: "+string.Join(", ",s.Items[s.Room])+".":"There are no loose objects here."));
+        var opened=new[]{("west-open","western shrine"),("east-open","eastern shrine"),("north-open","gallery crossing")}.Where(x=>s.Flags.Contains(x.Item1)).Select(x=>x.Item2).ToArray();
+        if(opened.Length>0)Say(s,"Opened routes: "+string.Join(", ",opened)+".");
     }
     private static string? Resolve(Expedition s,string noun,IEnumerable<string> items)
     {
         var choices=items.Distinct().ToArray();
         if(choices.Contains(noun))return noun;
-        var matches=choices.Where(x=>noun.Length>0&&x.Split(' ').Contains(noun)).ToArray();
+        var matches=choices.Where(x=>noun.Length>0&&CommandAliases.ItemMatches(x,noun)).ToArray();
         if(matches.Length==1)return matches[0];
         Say(s,matches.Length>1?"Which do you mean: "+string.Join(", ",matches)+"?":"You cannot find that object here.");
         return null;
@@ -94,6 +95,7 @@ public static class Engine
         var command=string.Join(' ',raw.Trim().ToLowerInvariant().Split(' ',StringSplitOptions.RemoveEmptyEntries));
         if(command.Length==0)return;
         Say(s,command,"command");
+        command=CommandAliases.Command(command);
         s.Actions++;
         var parts=command.Split(' ',2);var verb=parts[0];var noun=parts.Length>1?parts[1]:"";
         var level=Current(s);
@@ -129,7 +131,13 @@ public static class Engine
             if(s.Room!="camp")Say(s,"Relics must be deposited at this level's landing.");
             else {var relics=s.Inventory.Where(x=>level.Relics.Contains(x)).ToArray();foreach(var item in relics){s.Inventory.Remove(item);s.Banked.Add(item);}Say(s,relics.Length>0?"Secured: "+string.Join(", ",relics)+". +20 points each.":"You have no relics to deposit.");if(relics.Length>0)s.Achievements.Add("Relic keeper");}
         }
-        else if(verb is "read" or "examine" or "x" or "look") Examine(s,noun);
+        else if(verb=="read")
+        {
+            // The study's fixed inscription keeps its established command even while carrying a tablet relic.
+            if(s.Room=="study"&&noun is "tablet" or "inscription")Examine(s,noun);
+            else if(!ReadableItems.TryRead(s,noun))Examine(s,noun);
+        }
+        else if(verb is "examine" or "x" or "look") Examine(s,noun);
         else if(verb=="hint")
         {
             string key=$"{s.Level}:{s.Room}";int index=s.Hints.GetValueOrDefault(key);
@@ -176,32 +184,40 @@ public static class Engine
         if(s.Room=="study"&&noun is "tablet" or "inscription")
         {
             if(s.Level<=5){string clue=Tablet(s,s.Level);if(!s.Journal.Contains(clue))s.Journal.Add(clue);Say(s,clue+" Copied into your journal.");s.Achievements.Add("Keeper of notes");}
-            else Say(s,level.Rooms["study"].Description);
+            else Say(s,RoomNarrative.Describe(s));
             return;
         }
-        if(noun is "room" or "wall" or "mechanism" or "inscription" or "riddle"){Say(s,level.Rooms[s.Room].Description);return;}
+        if(noun is "room" or "wall" or "mechanism" or "inscription" or "riddle"){Say(s,RoomNarrative.Describe(s));return;}
         var present=s.Inventory.Concat(s.Items[s.Room]).ToArray();
-        if(noun=="chart"||noun=="star chart") {Say(s,present.Contains("star chart")?"The chart marks ORION as the constellation that opens the dome.":"You do not have the chart here.");return;}
+        if(!present.Contains(noun))
+        {
+            var matches=present.Distinct().Where(x=>CommandAliases.ItemMatches(x,noun)).ToArray();
+            if(matches.Length>1){Resolve(s,noun,present);return;}
+            if(matches.Length==1)noun=matches[0];
+        }
+        if(noun=="chart"||noun=="star chart") {Say(s,present.Contains("star chart")?ReadableItems.StarChartText+" READ STAR CHART to copy it into your journal.":"You do not have the chart here.");return;}
         if(noun=="lamp"){Say(s,present.Contains("lamp")?"A steady brass lamp. LIGHT LAMP illuminates your current room. It needs no refilling.":"The lamp is elsewhere.");return;}
-        if(present.Any(x=>x==noun||x.Split(' ').Contains(noun))){Say(s,"The "+Resolve(s,noun,present)+" may be useful elsewhere. Read the mechanisms for signs of its purpose.");return;}
+        if(ReadableItems.TryExamine(s,noun))return;
+        if(present.Any(x=>x==noun||CommandAliases.ItemMatches(x,noun))){var item=Resolve(s,noun,present);if(item!=null)Say(s,"The "+item+" may be useful elsewhere. Read the mechanisms for signs of its purpose.");return;}
         // Scenery is described without revealing remote objects or solutions.
-        if(noun.Length>1&&level.Rooms[s.Room].Description.Contains(noun,StringComparison.OrdinalIgnoreCase))Say(s,level.Rooms[s.Room].Description);
+        var scenery=RoomNarrative.Describe(s);
+        if(noun.Length>1&&scenery.Contains(noun,StringComparison.OrdinalIgnoreCase))Say(s,scenery);
         else Say(s,"You see no such thing here. EXAMINE ROOM describes the visible mechanisms.");
     }
     public static object View(Expedition s)=>new {
-        s.PackId,totalRelics=s.PackId=="pyramid"?18:0,roomCount=Current(s).Rooms.Count,offeringCount=Current(s).Relics.Length,
+        s.PackId,packName=s.PackId=="pyramid"?"Chamber of the Gods":ContentPacks.Get(s.PackId).Name,totalRelics=s.PackId=="pyramid"?18:0,roomCount=Current(s).Rooms.Count,offeringCount=Current(s).Relics.Length,
         s.Level,levelName=Current(s).Name,room=Current(s).Rooms[s.Room].Name,roomId=s.Room,roomLit=Lit(s),
         roomNumber=s.PackId=="pyramid"?World.RoomNumber(s.Level,s.Room):Array.IndexOf(Current(s).Rooms.Keys.ToArray(),s.Room)+1,
         roomImage=Lit(s)?(s.PackId=="pyramid"?$"room-art/room{World.RoomNumber(s.Level,s.Room)}.png":ModEngine.Realm(s).Rooms[s.Room].Image):null,
         objective=Current(s).Objective,inventory=s.Inventory,score=s.Score,s.Moves,s.Actions,
         relics=s.Banked.Count,levelRelics=Current(s).Relics.Count(s.Banked.Contains),s.Solved,s.HintsUsed,s.MapsUsed,s.BonusPoints,
-        mapSnapshot=s.MapSnapshot,roomActivity=Exploration.RoomActivity(s),
+        mapSnapshot=s.MapSnapshot,roomActivity=Exploration.RoomActivity(s),roomChanges=Exploration.RoomChanges(s),
         s.Revision,s.Won,s.Started,s.Finished,s.Transcript,s.Journal,s.Achievements,
         visited=s.Visited.Select(id=>new{id,name=Current(s).Rooms[id].Name}),
         exits=Lit(s)?Current(s).Rooms[s.Room].Exits.Keys.ToArray():[],
         items=Lit(s)?s.Items[s.Room]:[],arrangement=s.Arrangement,
-        levels=(s.PackId=="pyramid"?World.Levels:ContentPacks.Get(s.PackId).Levels.Select(l=>l.AsLevel())).Select(l=>new{l.Number,l.Name}),
-        progress=s.PackId!="pyramid"?ContentPacks.Get(s.PackId).Levels.Count(l=>s.Achievements.Contains(l.Name+" complete"))*100/ContentPacks.Get(s.PackId).Levels.Count:s.Won?100:Math.Min(99,((s.Level-1)*3+Current(s).Relics.Count(s.Banked.Contains))*100/18)
+        levels=(s.PackId=="pyramid"?World.Levels:ContentPacks.Get(s.PackId).Levels.Select(l=>l.AsLevel())).Select(l=>new{l.Number,l.Name,completed=s.PackId=="pyramid"?l.Number<s.Level||s.Won:ModEngine.Complete(s,ContentPacks.Get(s.PackId).Levels.Single(r=>r.Number==l.Number))}),
+        progress=s.PackId!="pyramid"?(s.Won?100:ContentPacks.Get(s.PackId).Levels.Count(l=>ModEngine.Complete(s,l))*100/ContentPacks.Get(s.PackId).Levels.Count):s.Won?100:Math.Min(99,((s.Level-1)*3+Current(s).Relics.Count(s.Banked.Contains))*100/18)
     };
 }
 
