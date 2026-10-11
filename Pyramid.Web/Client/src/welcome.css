@@ -26,3 +26,14 @@
 .welcome-support a:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
 
 .site-notice{padding:12px 24px;border-bottom:1px solid var(--line);background:#23251c;color:var(--gold);overflow-wrap:anywhere;white-space:pre-wrap}
+
+.auth-panel .auth-links{display:flex;flex-direction:column;gap:16px;margin-top:26px;padding-top:24px;border-top:1px solid var(--line)}
+.auth-switch p{margin:0 0 10px;color:var(--text);font-size:14px}
+.auth-panel .auth-switch-button{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;min-height:52px;padding:14px 18px;border:1px solid var(--gold);background:#282318;color:#efd49a;font-size:13px;font-weight:700;letter-spacing:1px;text-align:left}
+.auth-switch-button span{font-size:20px;line-height:1}
+.auth-panel .auth-switch-button:hover:not(:disabled){background:var(--gold);color:var(--bg)}
+.auth-switch small{display:block;margin-top:10px;color:var(--muted);font-size:12px;line-height:1.6}
+.auth-panel .auth-recovery-button{width:100%;min-height:48px;padding:12px 16px;border:1px solid var(--line);font-size:12px;letter-spacing:0;color:var(--text);background:#171914}
+.auth-recovery-button span{color:var(--gold);text-decoration:underline;text-underline-offset:4px;margin-left:6px}
+.auth-panel .auth-recovery-button:hover:not(:disabled){border-color:var(--gold);background:#242219}
+.auth-panel .auth-links button:focus-visible{outline:2px solid #efd49a;outline-offset:4px}

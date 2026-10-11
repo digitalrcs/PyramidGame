@@ -6,6 +6,14 @@ public static class AccountChecks
 {
     public static void Run(Action<bool,string> check)
     {
+        check(AccountEndpoints.ValidEmail("Explorer@Example.tv"),"Mixed-case email with .tv domain is valid");
+        check(AccountEndpoints.RegistrationError("Explorer","Explorer@Example.tv","example-passphrase") is null,"Registration accepts mixed-case .tv address");
+        check(AccountEndpoints.RegistrationError(" Explorer "," Explorer@Example.tv ","example-passphrase") is null,"Registration tolerates surrounding pasted spaces");
+        check(AccountEndpoints.RegistrationError("Explorer","Explorer@Example.tv","short")!.StartsWith("Password"),"Short password error does not blame a valid email");
+        check(AccountEndpoints.RegistrationError("Explorer@Example.tv","Explorer@Example.tv","example-passphrase")!.StartsWith("Explorer name"),"Email entered as explorer name gets a specific name error");
+        check(AccountEndpoints.RegistrationError("Explorer","not-an-email","example-passphrase")!.StartsWith("Enter a valid email"),"Malformed email gets a specific email error");
+        check(AccountEndpoints.RegistrationError("Explorer","explorer @example.tv","example-passphrase")!=null,"Internal email whitespace remains rejected");
+        check(AccountEndpoints.RegistrationError("Explorer","explorer@example.tv\r\nBcc:other@example.tv","example-passphrase")!=null,"Embedded email header injection remains rejected");
         string path=Path.Combine(Path.GetTempPath(),"pyramid-accounts-"+Guid.NewGuid().ToString("N"));var db=new Storage(path);
         db.Create("admin","Keeper","old");db.Create("a","Alpha","old","alpha@example.test");db.Create("b","Bravo","old");
         check(db.FindById("admin")?.IsAdmin==false,"Registration never grants administrator rights");

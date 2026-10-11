@@ -17,6 +17,13 @@ public static class AccountEndpoints
         return System.Net.Mail.MailAddress.TryCreate(email,out var parsed)&&parsed.Address==email&&email.Contains('@')&&email.Split('@')[1].Contains('.');
     }
     static bool Password(string? value)=>value is {Length:>=12 and <=128};
+    public static string? RegistrationError(string? name,string? email,string? password)
+    {
+        if(name is null||!Regex.IsMatch(name.Trim(),"\\A[a-zA-Z0-9_-]{3,24}\\z"))return "Explorer name must be 3–24 characters, using only letters, numbers, underscores or dashes. Enter your email in the separate Email address field.";
+        if(!ValidEmail(email?.Trim()))return "Enter a valid email address, such as explorer@example.com.";
+        if(!Password(password))return "Password must contain 12–128 characters.";
+        return null;
+    }
     static string HashToken(string token)=>Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
     static bool TokenValid(string? token)=>token is {Length:64}&&token.All(Uri.IsHexDigit);
     static string User(HttpContext c)=>c.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
@@ -50,7 +57,9 @@ public static class AccountEndpoints
         });
         app.MapPost("/api/register",async(Registration input,HttpContext c,Storage db,IPasswordHasher<string> hasher,MailDelivery mail)=>{
             if(!settings.AllowRegistration)return Results.Json(new{error="Registration is closed."},statusCode:403);
-            if(input.Name is null||!Regex.IsMatch(input.Name,"\\A[a-zA-Z0-9_-]{3,24}\\z")||!Password(input.Password)||!ValidEmail(input.Email))return Results.BadRequest(new{error="Enter a valid email, a 3–24 character explorer name (letters, numbers, underscore or dash), and a 12–128 character password."});
+            var error=RegistrationError(input.Name,input.Email,input.Password);
+            if(error!=null)return Results.BadRequest(new{error});
+            input=input with{Name=input.Name.Trim(),Email=input.Email.Trim()};
             var id=Guid.NewGuid().ToString("N");
             if(!db.Create(id,input.Name,hasher.HashPassword(id,input.Password),input.Email))return Results.BadRequest(new{error="That explorer name or email is unavailable."});
             var account=db.FindById(id)!;var delivery=QueueVerification(db,mail,account);db.LoginResult(id,true);await SignIn(c,db,account);

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.2 — 2026-10-11
+
+- Made Create an account a prominent full-width button and gave password recovery a separate button with an underlined action.
+- Added clearer keyboard focus and larger tap targets for login-page account options.
+- Registration now identifies which field needs attention rather than blaming email, name and password together. Surrounding spaces in names and email addresses are trimmed; passwords are unchanged.
+- Mixed-case email addresses and .tv domains remain supported.
+
 ## 1.4.1 — 2026-10-11
 
 ### Tablet reading fix
